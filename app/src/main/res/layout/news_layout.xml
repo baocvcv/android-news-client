@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#FFF"
+    android:paddingBottom="0dp"
+    android:fillViewport="true">
+
+    <!-- 刷新提示区 -->
+
+    <!-- /刷新提示区 -->
+
+
+    <!-- 内容列表区 -->
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical"
+        android:background="#FFF">
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarSize="1dp"
+            android:layout_width="match_parent"    >
+        </ListView>
+
+
+    </LinearLayout>
+    <!-- /内容列表区 -->
+
+</RelativeLayout>
