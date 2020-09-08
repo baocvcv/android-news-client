@@ -221,7 +221,6 @@ public class NewsViewModel extends AndroidViewModel {
         conn.setConnectTimeout(60 * 1000);
         conn.setReadTimeout(30 * 1000);
         conn.setRequestMethod("GET");
-//        conn.connect();
         if (conn.getResponseCode() != 200) {
             //TODO: add toast: "bad internet connection"
             return null;

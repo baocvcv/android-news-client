@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.java.baohan.backend.NewsViewModel;
+import com.java.baohan.backend.PandemicData;
 import com.java.baohan.model.News;
 import com.java.baohan.ui.main.SectionsPagerAdapter;
 
@@ -99,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("searched : " + result.size());
 //                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
                         // view search history
-                        System.out.print("Search history: " + String.join(", ", mNewsViewModel.getSearchHistory()));
+                        System.out.print("Search history: ");
+                        System.out.println(String.join(", ", mNewsViewModel.getSearchHistory()));
                     }
                 });
                 thread.start();
@@ -149,5 +151,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         t.start();
+
+        // pandemic data interface
+        PandemicData pdData = new PandemicData();
     }
 }
