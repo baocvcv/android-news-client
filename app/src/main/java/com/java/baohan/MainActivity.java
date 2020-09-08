@@ -33,7 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // ViewModel used to update news and manipulate news database
     private NewsViewModel mNewsViewModel;
+
     //the following four Interface:
     //fragment1:News
     //fragment2:Epidemic data
@@ -61,13 +63,24 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
 
+        /*
+        Demonstration of NewsViewModel
+         */
+        // Update news / paper
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Network activity must not be run in the main thread
+                // so it is necessary to create a new thread to run update tasks
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mNewsViewModel.retrieveOldNews();
+                        // retrieves new news and papers
+                        mNewsViewModel.updateNews(); // updates news
+                        mNewsViewModel.updatePapers(); // updates papers
+                        // retrieves old news and papers
+                        mNewsViewModel.retrieveOldNews(); // retrieves old news
+                        mNewsViewModel.retrieveOldPapers(); // retrieves old papers
                     }
                 });
                 thread.start();
@@ -76,20 +89,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Create viewmodel
         mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mNewsViewModel.updateNews();
-            }
-        });
 
+        // Observes the change in News data, can be used to update UI elements
         mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable final List<News> news) {
                 for (News n : news)
                     System.out.println(n);
                 System.out.println("******Currently have " + news.size() + " news!***********");
+            }
+        });
+        mNewsViewModel.getAllPapers().observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                System.out.println("******Currently have " + news.size() + " papers!**********");
+            }
+        });
+
+        // Can run this when app starts to update news
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mNewsViewModel.updateNews();
             }
         });
         t.start();
