@@ -14,9 +14,8 @@ public interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<News> news);
-//    void insertAll(News... news);
 
     @Delete
     void delete(News news);

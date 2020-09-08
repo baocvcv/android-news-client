@@ -11,17 +11,19 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 //@Fts4(languageId = "lid")
-@Entity(tableName = "news_table",
-        indices = {@Index(value = {"rowid", "id"}, unique = true)})
+@Entity(tableName = "news_table")
+//        indices = {@Index(value = {"rowid", "id"}, unique = true)})
 public class News implements Comparable<News> {
 
     public static final int EN = 0;
     public static final int ZH = 1;
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "rowid")
-    public int uid;
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "rowid")
+//    public int uid;
 
+    @PrimaryKey
+    @NonNull
     public String id;
 
     public Date time;
@@ -74,4 +76,8 @@ public class News implements Comparable<News> {
         return time.compareTo(rhs.time);
     }
 
+    @Override
+    public String toString() {
+        return title + " " + time + " " + id;
+    }
 }

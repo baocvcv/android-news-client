@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mNewsViewModel.updateNews();
+                        mNewsViewModel.retrieveOldNews();
                     }
                 });
                 thread.start();
@@ -54,14 +54,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mNewsViewModel.updateNews();
+            }
+        });
 
         mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable final List<News> news) {
-                System.out.println("Currently have " + news.size() + " news!");
                 for (News n : news)
-                    System.out.print(n);
+                    System.out.println(n);
+                System.out.println("******Currently have " + news.size() + " news!***********");
             }
         });
+        t.start();
     }
 }

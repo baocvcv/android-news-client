@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {News.class}, version = 2, exportSchema = false)
+@Database(entities = {News.class}, version = 3, exportSchema = false)
 @TypeConverters({NewsConverters.class})
 public abstract class NewsDatabase extends RoomDatabase {
 
@@ -29,6 +29,7 @@ public abstract class NewsDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             NewsDatabase.class, "news_database")
+                            .addCallback(sNewsDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();
                 }
@@ -44,6 +45,7 @@ public abstract class NewsDatabase extends RoomDatabase {
             super.onOpen(db);
             databaseWriteExecutor.execute(() -> {
                 //TODO: change start up code
+                System.out.println("*************************************reached!");
                 NewsDao dao = INSTANCE.newsDao();
                 dao.deleteAll();
             });

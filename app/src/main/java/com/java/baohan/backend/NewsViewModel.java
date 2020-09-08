@@ -39,7 +39,8 @@ public class NewsViewModel extends AndroidViewModel {
     private static final String TAG_LANG = "lang";
 
     private static final String URL_BASE = "https://covid-dashboard.aminer.cn/api/events/list?type=%s&page=%d&size=%d";
-    private static final int UPDATE_SIZE = 100;
+    private static final int UPDATE_SIZE = 50;
+    private static final int RETRIEVE_OLD_SIZE = 37;
     private static int earliestPage = -1;
 
     public NewsViewModel (Application app) {
@@ -83,8 +84,6 @@ public class NewsViewModel extends AndroidViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("******Reached update News!");
-        System.out.println("******size of news: " + allNews.getValue().size());
     }
 
     public void retrieveOldNews() {
@@ -108,7 +107,7 @@ public class NewsViewModel extends AndroidViewModel {
         }
 
         int curSize = collection.getValue().size();
-        int pageNum = (curSize + UPDATE_SIZE - 1) / UPDATE_SIZE;
+        int pageNum = (curSize + RETRIEVE_OLD_SIZE - 1) / RETRIEVE_OLD_SIZE;
         if (earliestPage < pageNum) {
             earliestPage = pageNum;
         }
@@ -116,7 +115,7 @@ public class NewsViewModel extends AndroidViewModel {
         try {
             boolean hasNew = false;
             while(!hasNew) {
-                URL url = new URL(String.format(URL_BASE, type, earliestPage, UPDATE_SIZE));
+                URL url = new URL(String.format(URL_BASE, type, earliestPage, RETRIEVE_OLD_SIZE));
                 List<News> newsList = parse(getInputStream(url));
                 if (!collection.getValue().contains(newsList.get(newsList.size()-1))) {
                     // check if the earliest news is in the current collection
@@ -183,7 +182,6 @@ public class NewsViewModel extends AndroidViewModel {
 
             ret.add(new News(id, time, title, content, source, isPaper, lid));
         }
-        Collections.sort(ret, (e1, e2) -> e1.time.compareTo(e2.time));
 
         return ret;
     }
