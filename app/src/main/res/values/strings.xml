@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">Ultimate_News_App</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_1">News</string>
+    <string name="tab_text_2">Epidemic data</string>
+    <string name="tab_text_3">Epidemic map</string>
+    <string name="tab_text_4">Relative scholar</string>
+
+    <string name="tab_text1_sub1">社会</string>
+    <string name="tab_text1_sub2">国际</string>
+    <string name="tab_text1_sub3">热点</string>
+    <string name="tab_text1_sub4">关注</string>
+    <string name="tab_text1_sub5">北京</string>
+    <string name="tab_text1_sub6">官方</string>
+    <string name="tab_text1_sub7">娱乐</string>
+    <string name="tab_text1_sub8">问答</string>
+    <string name="tab_text1_sub9">军事</string>
+    <string name="tab_text1_sub10">体育</string>
 </resources>

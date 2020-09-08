@@ -10,6 +10,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.java.baohan.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
@@ -17,19 +20,27 @@ import com.java.baohan.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,R.string.tab_text_3, R.string.tab_text_4};
     private final Context mContext;
+    private List<Fragment> fragmentList=new ArrayList<Fragment>();
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }
 
+    public SectionsPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragmentList) {
+        super(fm);
+        mContext = context;
+        this.fragmentList = fragmentList;
+    }
+
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        //return PlaceholderFragment.newInstance(position + 1);
+        return fragmentList.get(position);
     }
 
     @Nullable
@@ -38,9 +49,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
+
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
+        return fragmentList.size();
     }
 }

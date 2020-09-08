@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFF"
+    android:paddingBottom="50dp"
+    android:fillViewport="true">
+
+    <!-- 刷新提示区 -->
+    <!-- /刷新提示区 -->
+
+
+    <!-- 内容列表区 -->
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout"
+        >
+
+    </androidx.viewpager.widget.ViewPager>
+
+
+
+
+    <!-- /内容列表区 -->
+
+
+
+    <!-- 固定顶部 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFD700"
+        android:id="@+id/search_bar_fg1">
+
+        <EditText
+            android:layout_width="275dp"
+            android:layout_height="40dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:padding="5dp"
+            android:id="@+id/search_text_fg1"/>
+
+
+        <RelativeLayout
+            android:id="@+id/search_button_fg1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/search_bar_text_fg1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:text="搜索"
+                android:textColor="#000000"
+                android:textSize="10sp"/>
+            <ImageView
+                android:id="@+id/search_bar_image_fg1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/search_bar_text_fg1"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/search"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <!-- /固定顶部 -->
+
+    <!--/滑动导航-->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_bar_fg1"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="@color/colorPrimary"
+        app:tabIndicatorFullWidth="false"
+        >
+
+    </com.google.android.material.tabs.TabLayout>
+
+
+
+
+
+    <!--/滑动导航-->
+
+
+
+
+</RelativeLayout>
