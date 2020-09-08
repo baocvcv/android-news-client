@@ -23,6 +23,7 @@ public interface NewsDao {
     @Query("delete from news_table")
     void deleteAll();
 
+    //TODO: remove rowid if News model is confirmed
     @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
             " from news_table order by time desc")
     LiveData<List<News>> getAll();
