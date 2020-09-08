@@ -28,26 +28,44 @@ public interface NewsDao {
     void deleteAll();
 
     //TODO: remove rowid if News model is confirmed
-    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
-            " from news_table order by time desc")
+    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "order by time desc")
     LiveData<List<News>> getAll();
 
-    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
-            " from news_table where isPaper = 0 and isRead = :isRead order by time desc")
+    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where isPaper = 0 and isRead = :isRead " +
+            "order by time desc")
     LiveData<List<News>> getAllNews(boolean isRead);
 
-    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
-            " from news_table where isPaper = 0 order by time desc")
+    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where isPaper = 0 " +
+            "order by time desc")
     LiveData<List<News>> getAllNews();
 
-    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
-            " from news_table where isPaper = 1 and isRead = :isRead order by time desc")
+    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where isPaper = 1 and isRead = :isRead " +
+            "order by time desc")
     LiveData<List<News>> getAllPapers(boolean isRead);
 
-    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid" +
-            " from news_table where isPaper = 1 order by time desc")
+    @Query("select rowid, id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where isPaper = 1 " +
+            "order by time desc")
     LiveData<List<News>> getAllPapers();
 
-//    @Query()
-//    List<News> searchWord(String keyword);
+    @Query("select id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where title match :keyword or content match :keyword " +
+            "order by time desc")
+    LiveData<List<News>> searchWord(String keyword);
+
+    @Query("select id, time, title, content, source, isPaper, isRead, lid " +
+            "from news_table " +
+            "where title match :keyword or content match :keyword " +
+            "order by time desc")
+    List<News> searchWordSync(String keyword);
 }

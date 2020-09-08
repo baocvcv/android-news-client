@@ -45,7 +45,6 @@ public abstract class NewsDatabase extends RoomDatabase {
             super.onOpen(db);
             databaseWriteExecutor.execute(() -> {
                 //TODO: change start up code
-                System.out.println("*************************************reached!");
                 NewsDao dao = INSTANCE.newsDao();
 //                dao.deleteAll();
             });

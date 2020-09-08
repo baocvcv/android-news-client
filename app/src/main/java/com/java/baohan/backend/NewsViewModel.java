@@ -19,7 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NewsViewModel extends AndroidViewModel {
 
@@ -43,6 +46,10 @@ public class NewsViewModel extends AndroidViewModel {
     private static final int RETRIEVE_OLD_SIZE = 37;
     private static int earliestPage = -1;
 
+    private static final int SEARCH_RANGE = 1000;
+    private static final int CACHE_STEP = 100;
+    private static ConcurrentHashMap<String, News> recentNewsCache;
+
     /*
     Public methods
      */
@@ -51,6 +58,15 @@ public class NewsViewModel extends AndroidViewModel {
         repo = new NewsRepository(app);
         allNews = repo.getAllNews();
         allPapers = repo.getAllPapers();
+        recentNewsCache = new ConcurrentHashMap<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    updateCache();
+                } catch (Exception e) {}
+            }
+        }).start();
     }
 
     public LiveData<List<News>> getAllPapers() {
@@ -73,11 +89,25 @@ public class NewsViewModel extends AndroidViewModel {
 
     public void retrieveOldPapers() { retrieveOld(true); }
 
-    public List<News> searchAll(String keyword) { return search(keyword); }
+    public void saveNews(News news) {
+        news.isRead = true;
+        repo.insert(news);
+    }
 
     public void markRead(News news) {
         news.isRead = true;
         repo.update(news);
+    }
+
+    public List<News> searchRecentNews(String keyword) {
+        List<News> result = new ArrayList<>();
+        for (Map.Entry<String, News> entry: recentNewsCache.entrySet()) {
+            if (entry.getValue().title.contains(keyword)) {
+                result.add(entry.getValue());
+            }
+        }
+        Collections.sort(result, (e1, e2) -> e2.compareTo(e1));
+        return result;
     }
 
     /*
@@ -138,6 +168,22 @@ public class NewsViewModel extends AndroidViewModel {
         }
     }
 
+    private void updateCache() throws Exception {
+        for (int i = 0; i < SEARCH_RANGE / CACHE_STEP; i++) {
+            URL url = new URL(String.format(URL_BASE, "paper", i+1, CACHE_STEP));
+            List<News> newsList = parse(getInputStream(url));
+            for (News n: newsList) {
+                recentNewsCache.putIfAbsent(n.id, n);
+            }
+
+            url = new URL(String.format(URL_BASE, "news", i+1, CACHE_STEP));
+            newsList = parse(getInputStream(url));
+            for (News n: newsList) {
+                recentNewsCache.putIfAbsent(n.id, n);
+            }
+        }
+    }
+
     private InputStream getInputStream(URL url) throws Exception {
         HttpURLConnection conn;
         conn = (HttpURLConnection) url.openConnection();
@@ -192,9 +238,5 @@ public class NewsViewModel extends AndroidViewModel {
             ret.add(new News(id, time, title, content, source, isPaper, lid));
         }
         return ret;
-    }
-
-    private List<News> search(String keyword) {
-        return null;
     }
 }

@@ -48,4 +48,12 @@ public class NewsRepository {
             newsDao.update(news);
         });
     }
+
+    LiveData<List<News>> search(String keyword) {
+        return newsDao.searchWord(keyword);
+    }
+
+    List<News> searchSync(String keyword) {
+        return newsDao.searchWordSync(keyword);
+    }
 }

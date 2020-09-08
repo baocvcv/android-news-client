@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Fts4;
+import androidx.room.FtsOptions;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -11,8 +12,9 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 //@Fts4(languageId = "lid")
+//@Fts4(tokenizer = FtsOptions.TOKENIZER_SIMPLE)
 @Entity(tableName = "news_table")
-//        indices = {@Index(value = {"rowid", "id"}, unique = true)})
+//        indices = {@Index(value = {"id"}, unique = true)})
 public class News implements Comparable<News> {
 
     public static final int EN = 0;
@@ -41,7 +43,7 @@ public class News implements Comparable<News> {
     @ColumnInfo(name = "lid")
     public int languageId; // 0 for en, 1 for zh
 
-    public News(String id, Date time, String title, String content, String source, boolean isPaper, int languageId, boolean isRead) {
+    public News(@NonNull String id, Date time, String title, String content, String source, boolean isPaper, int languageId, boolean isRead) {
         this.id = id;
         this.time = time;
         this.title = title;
@@ -53,7 +55,7 @@ public class News implements Comparable<News> {
     }
 
     @Ignore
-    public News(String id, Date time, String title, String content, String source, boolean isPaper, int languageId) {
+    public News(@NonNull String id, Date time, String title, String content, String source, boolean isPaper, int languageId) {
         this.id = id;
         this.time = time;
         this.title = title;

@@ -84,8 +84,17 @@ public class MainActivity extends AppCompatActivity {
 //                        mNewsViewModel.retrieveOldPapers(); // retrieves old papers
 
                         // mark news as read
-                        News n = mNewsViewModel.getAllNews().getValue().get(0);
-                        mNewsViewModel.markRead(n);
+//                        News n = mNewsViewModel.getAllNews().getValue().get(0);
+//                        mNewsViewModel.markRead(n);
+
+                        // search
+                        List<News> result = mNewsViewModel.searchRecentNews("新冠");
+                        System.out.println("******************search result **************");
+                        for (News n : result) {
+                            System.out.println("Search result: " + n);
+                        }
+                        System.out.println("searched : " + result.size());
+//                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
                     }
                 });
                 thread.start();
@@ -101,15 +110,15 @@ public class MainActivity extends AppCompatActivity {
         mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable final List<News> news) {
-                for (News n : news)
-                    System.out.println(n);
-                System.out.println("******Currently have " + news.size() + " news!***********");
+//                for (News n : news)
+//                    System.out.println(n);
+                System.out.println("News updated! Currently have " + news.size() + " news!");
             }
         });
         mNewsViewModel.getAllPapers().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(List<News> news) {
-                System.out.println("******Currently have " + news.size() + " papers!**********");
+                System.out.println("Currently have " + news.size() + " papers!");
             }
         });
 
@@ -118,6 +127,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 mNewsViewModel.updateNews();
+            }
+        });
+        t.start();
+
+        // search
+        t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<News> result = mNewsViewModel.searchRecentNews("新冠");
+                System.out.println("******************search result **************");
+                for (News n : result) {
+                    System.out.println("Search result: " + n);
+                }
+                System.out.println("searched : " + result.size());
             }
         });
         t.start();
