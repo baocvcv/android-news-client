@@ -47,7 +47,7 @@ public abstract class NewsDatabase extends RoomDatabase {
                 //TODO: change start up code
                 System.out.println("*************************************reached!");
                 NewsDao dao = INSTANCE.newsDao();
-                dao.deleteAll();
+//                dao.deleteAll();
             });
         }
     };

@@ -37,10 +37,15 @@ public class NewsRepository {
         });
     }
 
-//    void insert(News... news) {
     void insert(List<News> news) {
         NewsDatabase.databaseWriteExecutor.execute(() -> {
             newsDao.insertAll(news);
+        });
+    }
+
+    void update(News news) {
+        NewsDatabase.databaseWriteExecutor.execute(() -> {
+            newsDao.update(news);
         });
     }
 }

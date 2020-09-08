@@ -78,6 +78,6 @@ public class News implements Comparable<News> {
 
     @Override
     public String toString() {
-        return title + " " + time + " " + id;
+        return title + " " + time + " " + isRead;
     }
 }

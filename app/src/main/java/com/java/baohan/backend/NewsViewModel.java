@@ -43,6 +43,9 @@ public class NewsViewModel extends AndroidViewModel {
     private static final int RETRIEVE_OLD_SIZE = 37;
     private static int earliestPage = -1;
 
+    /*
+    Public methods
+     */
     public NewsViewModel (Application app) {
         super(app);
         repo = new NewsRepository(app);
@@ -66,6 +69,20 @@ public class NewsViewModel extends AndroidViewModel {
         updateNews(true );
     }
 
+    public void retrieveOldNews() { retrieveOld(false); }
+
+    public void retrieveOldPapers() { retrieveOld(true); }
+
+    public List<News> searchAll(String keyword) { return search(keyword); }
+
+    public void markRead(News news) {
+        news.isRead = true;
+        repo.update(news);
+    }
+
+    /*
+    Private methods
+     */
     private void updateNews(boolean isPaper) {
         // retrieve news and save in database
         String type;
@@ -84,14 +101,6 @@ public class NewsViewModel extends AndroidViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void retrieveOldNews() {
-        retrieveOld(false);
-    }
-
-    public void retrieveOldPapers() {
-        retrieveOld(true);
     }
 
     private void retrieveOld(boolean isPaper) {
@@ -182,7 +191,10 @@ public class NewsViewModel extends AndroidViewModel {
 
             ret.add(new News(id, time, title, content, source, isPaper, lid));
         }
-
         return ret;
+    }
+
+    private List<News> search(String keyword) {
+        return null;
     }
 }

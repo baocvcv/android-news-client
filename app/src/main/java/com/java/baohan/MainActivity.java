@@ -76,11 +76,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // retrieves new news and papers
-                        mNewsViewModel.updateNews(); // updates news
-                        mNewsViewModel.updatePapers(); // updates papers
+//                        mNewsViewModel.updateNews(); // updates news
+//                        mNewsViewModel.updatePapers(); // updates papers
+
                         // retrieves old news and papers
-                        mNewsViewModel.retrieveOldNews(); // retrieves old news
-                        mNewsViewModel.retrieveOldPapers(); // retrieves old papers
+//                        mNewsViewModel.retrieveOldNews(); // retrieves old news
+//                        mNewsViewModel.retrieveOldPapers(); // retrieves old papers
+
+                        // mark news as read
+                        News n = mNewsViewModel.getAllNews().getValue().get(0);
+                        mNewsViewModel.markRead(n);
                     }
                 });
                 thread.start();

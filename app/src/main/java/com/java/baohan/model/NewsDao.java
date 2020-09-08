@@ -3,6 +3,7 @@ package com.java.baohan.model;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Index;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -11,11 +12,14 @@ import java.util.List;
 
 @Dao
 public interface NewsDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(News news);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<News> news);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void update(News news);
 
     @Delete
     void delete(News news);
@@ -44,4 +48,6 @@ public interface NewsDao {
             " from news_table where isPaper = 1 order by time desc")
     LiveData<List<News>> getAllPapers();
 
+//    @Query()
+//    List<News> searchWord(String keyword);
 }
