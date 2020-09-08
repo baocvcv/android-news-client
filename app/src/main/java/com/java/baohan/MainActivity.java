@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        /*
+                        The following must be run in a new thread
+                         */
                         // retrieves new news and papers
 //                        mNewsViewModel.updateNews(); // updates news
 //                        mNewsViewModel.updatePapers(); // updates papers
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         System.out.println("searched : " + result.size());
 //                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
+                        // view search history
+                        System.out.print("Search history: " + String.join(", ", mNewsViewModel.getSearchHistory()));
                     }
                 });
                 thread.start();

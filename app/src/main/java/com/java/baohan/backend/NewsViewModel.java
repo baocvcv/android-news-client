@@ -1,6 +1,7 @@
 package com.java.baohan.backend;
 
 import android.app.Application;
+import android.icu.util.Output;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -11,8 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -20,16 +24,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NewsViewModel extends AndroidViewModel {
 
     private NewsRepository repo;
-
     private LiveData<List<News>> allNews;
     private LiveData<List<News>> allPapers;
+
+    private Application app;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
 
@@ -50,15 +57,21 @@ public class NewsViewModel extends AndroidViewModel {
     private static final int CACHE_STEP = 100;
     private static ConcurrentHashMap<String, News> recentNewsCache;
 
+    private static final String SEARCH_HISTORY_FILE = "searchHistory.txt";
+    private static List<String> searchHistory;
+
     /*
     Public methods
      */
     public NewsViewModel (Application app) {
         super(app);
+        this.app = app;
         repo = new NewsRepository(app);
         allNews = repo.getAllNews();
         allPapers = repo.getAllPapers();
+
         recentNewsCache = new ConcurrentHashMap<>();
+        // cache news for search
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -67,6 +80,14 @@ public class NewsViewModel extends AndroidViewModel {
                 } catch (Exception e) {}
             }
         }).start();
+
+        // load search history
+        searchHistory = new LinkedList<>();
+        try (Scanner scanner = new Scanner(app.openFileInput(SEARCH_HISTORY_FILE))) {
+            while (scanner.hasNextLine()) {
+                searchHistory.add(scanner.nextLine());
+            }
+        } catch (Exception e) {}
     }
 
     public LiveData<List<News>> getAllPapers() {
@@ -100,6 +121,12 @@ public class NewsViewModel extends AndroidViewModel {
     }
 
     public List<News> searchRecentNews(String keyword) {
+        searchHistory.add(0, keyword);
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(app.openFileOutput(SEARCH_HISTORY_FILE, app.MODE_PRIVATE)))) {
+            for (String s: searchHistory)
+                writer.write(s + "\n");
+        } catch (Exception e) {}
+
         List<News> result = new ArrayList<>();
         for (Map.Entry<String, News> entry: recentNewsCache.entrySet()) {
             if (entry.getValue().title.contains(keyword)) {
@@ -110,9 +137,13 @@ public class NewsViewModel extends AndroidViewModel {
         return result;
     }
 
+    public List<String> getSearchHistory() {
+        return searchHistory;
+    }
+
     /*
-    Private methods
-     */
+        Private methods
+         */
     private void updateNews(boolean isPaper) {
         // retrieve news and save in database
         String type;
