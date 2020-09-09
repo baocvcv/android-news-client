@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.AsyncTaskLoader;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.java.baohan.backend.DataEntry;
+import com.java.baohan.backend.KnowledgeGraph;
+import com.java.baohan.backend.KnowledgeNode;
 import com.java.baohan.backend.NewsViewModel;
 import com.java.baohan.backend.PandemicData;
+import com.java.baohan.backend.Scholar;
 import com.java.baohan.model.News;
 import com.java.baohan.ui.main.SectionsPagerAdapter;
 
@@ -31,6 +36,8 @@ import com.java.baohan.ui.main.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -102,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
                         // view search history
                         System.out.print("Search history: ");
                         System.out.println(String.join(", ", mNewsViewModel.getSearchHistory()));
+
+                        // get scholars
+                        ConcurrentHashMap<String, Scholar> aliveScholars = Scholar.getAliveScholars();
+                        for (Map.Entry<String, Scholar> entry: aliveScholars.entrySet()) {
+                            Scholar s = entry.getValue();
+                            System.out.println(s.name_zh + ": " + String.join("^", s.affiliation));
+                        }
+                        System.out.println(aliveScholars.size());
                     }
                 });
                 thread.start();
@@ -154,5 +169,24 @@ public class MainActivity extends AppCompatActivity {
 
         // pandemic data interface
         PandemicData pdData = new PandemicData();
+//        DataEntry entry = pdData.getCountryData().get("China").get(0); // will crash
+//        System.out.println(entry);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<KnowledgeNode> nodes = KnowledgeGraph.search("病毒");
+                for(KnowledgeNode n: nodes) {
+                    System.out.println(n);
+                }
+
+                Scholar.cacheScholars();
+            }
+        }).start();
+
+    }
+
+    class Pipe {
+        boolean taskFinished;
     }
 }

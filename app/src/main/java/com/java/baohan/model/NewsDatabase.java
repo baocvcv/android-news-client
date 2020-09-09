@@ -19,7 +19,7 @@ public abstract class NewsDatabase extends RoomDatabase {
     public abstract NewsDao newsDao();
 
     private static volatile NewsDatabase INSTANCE;
-    private static final int NUMBER_OF_THREADS = 4;
+    private static final int NUMBER_OF_THREADS = 2;
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
