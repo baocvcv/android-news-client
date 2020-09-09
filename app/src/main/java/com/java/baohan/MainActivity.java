@@ -55,21 +55,28 @@ public class MainActivity extends AppCompatActivity {
     //fragment3:Epidemic map
     //fragment4:Relative scholar
     private List<Fragment> fragmentList = new ArrayList<Fragment>();
-    private FragmentInterface1 fragment1=FragmentInterface1.getInstance();
-    private FragmentInterface2 fragment2=new FragmentInterface2();
-    private FragmentInterface3 fragment3=new FragmentInterface3();
-    private FragmentInterface4 fragment4=new FragmentInterface4();
+    private FragmentInterface1 fragment1;
+    private FragmentInterface2 fragment2 = FragmentInterface2.getInstance();
+    private FragmentInterface3 fragment3 = FragmentInterface3.getInstance();
+    private FragmentInterface4 fragment4 = FragmentInterface4.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Create viewmodel
+        mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+
         setContentView(R.layout.activity_main);
         //initView();
+        fragment1 = FragmentInterface1.getInstance(mNewsViewModel);
+
         fragmentList.add(fragment1);
         fragmentList.add(fragment2);
         fragmentList.add(fragment3);
         fragmentList.add(fragment4);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),fragmentList);
+
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -80,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         Demonstration of NewsViewModel
          */
 
-        // Create viewmodel
-        mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 
         // Required startup tasks for backend
         app = this.getApplication();
