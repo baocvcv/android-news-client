@@ -36,23 +36,23 @@ public class PandemicData {
         provinceData = new ConcurrentHashMap<>();
         provinceDetails = new ConcurrentHashMap<>();
 
-        // parse data
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateDataCache();
-            }
-        }).start();
-
-        // TODO: remove this
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!finishedUpdating) ;
-
-                System.out.println("Finished updating!");
-            }
-        }).start();
+//        // parse data
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                updateDataCache();
+//            }
+//        }).start();
+//
+//        // TODO: remove this
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while(!finishedUpdating) ;
+//
+//                System.out.println("Finished updating!");
+//            }
+//        }).start();
     }
 
     public ConcurrentHashMap<String, List<DataEntry>> getCountryData() {
@@ -69,7 +69,7 @@ public class PandemicData {
 
     public boolean isDataReady() { return finishedUpdating; }
 
-    private void updateDataCache() {
+    public static void updateDataCache() {
         finishedUpdating = false;
         try {
             URL url = new URL(DATA_URL);
@@ -78,7 +78,7 @@ public class PandemicData {
         finishedUpdating = true;
     }
 
-    private InputStream getInputStream(URL url) throws Exception {
+    private static InputStream getInputStream(URL url) throws Exception {
         HttpURLConnection conn;
         conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(60 * 1000);
@@ -91,7 +91,7 @@ public class PandemicData {
         return conn.getInputStream();
     }
 
-    private void parse(InputStream is) throws Exception {
+    private static void parse(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line;
@@ -117,7 +117,7 @@ public class PandemicData {
         }
     }
 
-    private List<DataEntry> parseData(JSONObject rawData) {
+    private static List<DataEntry> parseData(JSONObject rawData) {
         List<DataEntry> ret = new ArrayList<>();
         try {
             LocalDate beginDate = LocalDate.parse(rawData.getString("begin"), dateFormat);
