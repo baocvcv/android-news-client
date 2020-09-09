@@ -43,6 +43,7 @@ public class FragmentInterface1 extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mcontext = context;//mContext 是成员变量，上下文引用
+
     }
 
     public void onDetach() {
@@ -54,20 +55,21 @@ public class FragmentInterface1 extends Fragment {
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
         tabLayout=view.findViewById(R.id.tab_layout);
 
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
+        if (fragmentList.size() == 0) {
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+            fragmentList.add(new FragmentInterface1_sub());
+        }
 
         viewPager.setAdapter(new MyAdapter(mcontext,getChildFragmentManager(), fragmentList));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
 
         return view;
     }
