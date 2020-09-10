@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.AsyncTaskLoader;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -178,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Observes the change in News data, can be used to update UI elements
         mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable final List<News> news) {
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         PandemicData pdData = new PandemicData();
 //        DataEntry entry = pdData.getCountryData().get("China").get(0); // will crash
 //        System.out.println(entry);
+
 
     }
 }
