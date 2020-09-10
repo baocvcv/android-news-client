@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.java.baohan.R;
+import com.java.baohan.backend.NewsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,18 @@ import java.util.List;
 //Fragment for news
 public class FragmentInterface1 extends Fragment {
     private static FragmentInterface1 instance = null;
-    private FragmentInterface1() {    }
-    public static FragmentInterface1 getInstance() {
+
+    private NewsViewModel newsViewModel;
+
+    private FragmentInterface1() { }
+
+    private FragmentInterface1(NewsViewModel m) {
+        newsViewModel = m;
+    }
+
+    public static FragmentInterface1 getInstance(NewsViewModel m) {
         if (instance == null) {
-            instance = new FragmentInterface1();
+            instance = new FragmentInterface1(m);
         }
         return instance;
     }
@@ -65,17 +74,16 @@ public class FragmentInterface1 extends Fragment {
         fragmentList.add(new FragmentInterface1_sub("军事"));
     }
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_interface1,container,false);
 
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
 
         tabLayout=view.findViewById(R.id.tab_layout);
-
         viewPager.setAdapter(new MyAdapter(mcontext,getChildFragmentManager(), fragmentList));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
         return view;
     }
 

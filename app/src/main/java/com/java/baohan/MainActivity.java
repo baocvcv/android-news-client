@@ -8,20 +8,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
-import androidx.loader.content.AsyncTaskLoader;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.java.baohan.backend.CovidEvent;
-import com.java.baohan.backend.DataEntry;
 import com.java.baohan.backend.KnowledgeGraph;
 import com.java.baohan.backend.KnowledgeNode;
 import com.java.baohan.backend.NewsViewModel;
@@ -31,15 +26,12 @@ import com.java.baohan.model.News;
 import com.java.baohan.ui.main.SectionsPagerAdapter;
 
 import com.java.baohan.FragmentInterface.FragmentInterface1;
-import com.java.baohan.FragmentInterface.FragmentInterface2;
-import com.java.baohan.FragmentInterface.FragmentInterface3;
-import com.java.baohan.FragmentInterface.FragmentInterface4;
-import com.java.baohan.ui.main.SectionsPagerAdapter;
+import com.java.baohan.FragmentInterface.dataInterface.FragmentInterface2;
+import com.java.baohan.FragmentInterface.EntityInterface.FragmentInterface3;
+import com.java.baohan.FragmentInterface.ScholarInterface.FragmentInterface4;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,21 +47,28 @@ public class MainActivity extends AppCompatActivity {
     //fragment3:Epidemic map
     //fragment4:Relative scholar
     private List<Fragment> fragmentList = new ArrayList<Fragment>();
-    private FragmentInterface1 fragment1=FragmentInterface1.getInstance();
-    private FragmentInterface2 fragment2=new FragmentInterface2();
-    private FragmentInterface3 fragment3=new FragmentInterface3();
-    private FragmentInterface4 fragment4=new FragmentInterface4();
+    private FragmentInterface1 fragment1;
+    private FragmentInterface2 fragment2 = FragmentInterface2.getInstance();
+    private FragmentInterface3 fragment3 = FragmentInterface3.getInstance();
+    private FragmentInterface4 fragment4 = FragmentInterface4.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Create viewmodel
+        mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
+
         setContentView(R.layout.activity_main);
         //initView();
+        fragment1 = FragmentInterface1.getInstance(mNewsViewModel);
+
         fragmentList.add(fragment1);
         fragmentList.add(fragment2);
         fragmentList.add(fragment3);
         fragmentList.add(fragment4);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),fragmentList);
+
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -80,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         Demonstration of NewsViewModel
          */
 
-        // Create viewmodel
-        mNewsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 
         // Required startup tasks for backend
         app = this.getApplication();
@@ -95,9 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 mNewsViewModel.updatePapers();
                 mNewsViewModel.updateNews();
 
-                // cache pandemic data
-                PandemicData.updateDataCache();
-
                 // download scholar info
                 Scholar.cacheScholars();
 
@@ -105,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // cache pandemic data
+                PandemicData.updateDataCache();
+            }
+        }).start();
 
         // interfaces
         fab.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // Observes the change in News data, can be used to update UI elements
         mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(@Nullable final List<News> news) {
@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         PandemicData pdData = new PandemicData();
 //        DataEntry entry = pdData.getCountryData().get("China").get(0); // will crash
 //        System.out.println(entry);
+
 
     }
 }
