@@ -51,24 +51,26 @@ public class FragmentInterface1 extends Fragment {
         mcontext = null;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub());
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_interface1,container,false);
 
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
 
         tabLayout=view.findViewById(R.id.tab_layout);
-
-        if (fragmentList.size() == 0) {
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-            fragmentList.add(new FragmentInterface1_sub());
-        }
 
         viewPager.setAdapter(new MyAdapter(mcontext,getChildFragmentManager(), fragmentList));
         tabLayout.setupWithViewPager(viewPager);

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +40,12 @@ public class FragmentInterface1_sub extends Fragment {
     private LiveData<List<News>> allNews;
     private FragmentInterface1_sub This=this;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
+        allNews = mNewsViewModel.getAllNews();
+    }
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -80,11 +87,11 @@ public class FragmentInterface1_sub extends Fragment {
         }
     }
 
-    public void onCreated()
-    {
-        mNewsViewModel=new ViewModelProvider(this).get(NewsViewModel.class);;
-        allNews = mNewsViewModel.getAllNews();
-    }
+//    public void onCreated()
+//    {
+//        mNewsViewModel=new ViewModelProvider(this).get(NewsViewModel.class);;
+//        allNews = mNewsViewModel.getAllNews();
+//    }
 
 
 
@@ -101,7 +108,8 @@ public class FragmentInterface1_sub extends Fragment {
         list.add("齐心抗新冠，众志可成城");
         list.add("卫生部：深入贯彻落实中央有关新冠疫情的八项指示");
         list.add("震惊！美国疫情失控或引发局部冲突？");
-        adapterDome = new RecycleAdapterDome(mcontext,list);
+//        adapterDome = new RecycleAdapterDome(mcontext,list);
+        adapterDome = new RecycleAdapterDome(mcontext, allNews.getValue());
         mRecyclerView.setAdapter(adapterDome);
         LinearLayoutManager manager = new LinearLayoutManager(mcontext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -115,27 +123,32 @@ public class FragmentInterface1_sub extends Fragment {
             }
         });
 
-
+        allNews.observe(getViewLifecycleOwner(), new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                adapterDome.setList(news);
+            }
+        });
 
         return view;
     }
 
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mNewsViewModel=new ViewModelProvider(This).get(NewsViewModel.class);;
-                allNews = mNewsViewModel.getAllNews();
-                allNews.observe(This.getViewLifecycleOwner(), new Observer<List<News>>() {
-                    @Override
-                    public void onChanged(List<News> news) {
-
-                    }
-                });
-
-            }
-        });
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mNewsViewModel=new ViewModelProvider(This).get(NewsViewModel.class);;
+//                allNews = mNewsViewModel.getAllNews();
+//                allNews.observe(This.getViewLifecycleOwner(), new Observer<List<News>>() {
+//                    @Override
+//                    public void onChanged(List<News> news) {
+//
+//                    }
+//                });
+//
+//            }
+//        });
 
     }
 
@@ -144,11 +157,11 @@ public class FragmentInterface1_sub extends Fragment {
 
 class RecycleAdapterDome extends RecyclerView.Adapter<RecycleAdapterDome.MyViewHolder> {
     private Context context;
-    private List<String> list;
+    private List<News> list;
     private View inflater;
 
     //构造方法，传入数据
-    public RecycleAdapterDome(Context context, List<String> list) {
+    public RecycleAdapterDome(Context context, List<News> list) {
         this.context = context;
         this.list = list;
     }
@@ -164,12 +177,19 @@ class RecycleAdapterDome extends RecyclerView.Adapter<RecycleAdapterDome.MyViewH
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         //将数据和控件绑定
-        holder.textView.setText(list.get(position));
+        final int MAX_TITLE_LEN = 20;
+
+        News n = list.get(position);
+        String title_disp = n.title.length() < MAX_TITLE_LEN ? n.title : n.title.substring(0, MAX_TITLE_LEN);
+        holder.textView.setText(title_disp + "\n" + n.time);
     }
 
     @Override
     public int getItemCount() {
         //返回Item总条数
+        if(list == null) {
+            return 0;
+        }
         return list.size();
     }
 
@@ -180,6 +200,11 @@ class RecycleAdapterDome extends RecyclerView.Adapter<RecycleAdapterDome.MyViewH
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text_view);
         }
+    }
+
+    public void setList(List<News> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 /*
     public class DataAdapter extends RecyclerView.Adapter {
