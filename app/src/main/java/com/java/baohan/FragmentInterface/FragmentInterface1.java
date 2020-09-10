@@ -54,15 +54,15 @@ public class FragmentInterface1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub("社会"));
+        fragmentList.add(new FragmentInterface1_sub("国际"));
+        fragmentList.add(new FragmentInterface1_sub("热点"));
+        fragmentList.add(new FragmentInterface1_sub("关注"));
+        fragmentList.add(new FragmentInterface1_sub("北京"));
+        fragmentList.add(new FragmentInterface1_sub("官方"));
+        fragmentList.add(new FragmentInterface1_sub("娱乐"));
+        fragmentList.add(new FragmentInterface1_sub("问答"));
+        fragmentList.add(new FragmentInterface1_sub("军事"));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
