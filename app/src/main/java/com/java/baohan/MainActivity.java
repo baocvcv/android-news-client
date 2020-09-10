@@ -8,21 +8,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.java.baohan.backend.CovidEvent;
-import com.java.baohan.backend.DataEntry;
 import com.java.baohan.backend.KnowledgeGraph;
 import com.java.baohan.backend.KnowledgeNode;
 import com.java.baohan.backend.NewsViewModel;
@@ -32,15 +26,12 @@ import com.java.baohan.model.News;
 import com.java.baohan.ui.main.SectionsPagerAdapter;
 
 import com.java.baohan.FragmentInterface.FragmentInterface1;
-import com.java.baohan.FragmentInterface.FragmentInterface2;
+import com.java.baohan.FragmentInterface.dataInterface.FragmentInterface2;
 import com.java.baohan.FragmentInterface.FragmentInterface3;
 import com.java.baohan.FragmentInterface.FragmentInterface4;
-import com.java.baohan.ui.main.SectionsPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -101,9 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 mNewsViewModel.updatePapers();
                 mNewsViewModel.updateNews();
 
-                // cache pandemic data
-                PandemicData.updateDataCache();
-
                 // download scholar info
                 Scholar.cacheScholars();
 
@@ -111,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // cache pandemic data
+                PandemicData.updateDataCache();
+            }
+        }).start();
 
         // interfaces
         fab.setOnClickListener(new View.OnClickListener() {
