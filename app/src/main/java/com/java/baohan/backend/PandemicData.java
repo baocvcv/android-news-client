@@ -23,19 +23,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PandemicData {
 
-    private static ConcurrentHashMap<String, List<DataEntry>> countryData;
-    private static ConcurrentHashMap<String, List<DataEntry>> provinceData;
-    private static ConcurrentHashMap<String, ConcurrentHashMap<String, List<DataEntry>>> provinceDetails;
+    private static ConcurrentHashMap<String, List<DataEntry>> countryData = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, List<DataEntry>> provinceData = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, ConcurrentHashMap<String, List<DataEntry>>> provinceDetails = new ConcurrentHashMap<>();
     private static boolean finishedUpdating = false;
 
     private static final String DATA_URL = "https://covid-dashboard.aminer.cn/api/dist/epidemic.json";
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public PandemicData() {
-        countryData = new ConcurrentHashMap<>();
-        provinceData = new ConcurrentHashMap<>();
-        provinceDetails = new ConcurrentHashMap<>();
-
 //        // parse data
 //        new Thread(new Runnable() {
 //            @Override
@@ -55,19 +51,19 @@ public class PandemicData {
 //        }).start();
     }
 
-    public ConcurrentHashMap<String, List<DataEntry>> getCountryData() {
+    public static ConcurrentHashMap<String, List<DataEntry>> getCountryData() {
         return countryData;
     }
 
-    public ConcurrentHashMap<String, List<DataEntry>> getProvinceData() {
+    public static ConcurrentHashMap<String, List<DataEntry>> getProvinceData() {
         return provinceData;
     }
 
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, List<DataEntry>>> getProvinceDetails() {
+    public static ConcurrentHashMap<String, ConcurrentHashMap<String, List<DataEntry>>> getProvinceDetails() {
         return provinceDetails;
     }
 
-    public boolean isDataReady() { return finishedUpdating; }
+    public static boolean isDataReady() { return finishedUpdating; }
 
     public static void updateDataCache() {
         finishedUpdating = false;

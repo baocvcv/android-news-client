@@ -15,4 +15,6 @@
     <string name="tab_text1_sub8">问答</string>
     <string name="tab_text1_sub9">军事</string>
     <string name="tab_text1_sub10">体育</string>
+
+    <string name="dash">-</string>
 </resources>
