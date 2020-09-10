@@ -35,6 +35,8 @@ public class KnowledgeNode {
 
     public Bitmap img;
 
+    public int hot;
+
     public  KnowledgeNode() {}
 
     public KnowledgeNode(String label, String url, String intro, Map<String, String> properties, List<KnowledgeRelation> relations, Bitmap img) {
@@ -52,6 +54,14 @@ public class KnowledgeNode {
         try {
             ret.label = jsonObject.getString("label");
             ret.url = jsonObject.getString("url");
+
+            double hot = jsonObject.getDouble("hot");
+            if(hot > 0.7)
+                ret.hot = 3;
+            else if(hot > 0.4)
+                ret.hot = 2;
+            else
+                ret.hot = 1;
 
             JSONObject info = jsonObject.getJSONObject("abstractInfo");
             // parse wiki

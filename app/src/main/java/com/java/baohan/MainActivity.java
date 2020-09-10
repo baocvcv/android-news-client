@@ -156,16 +156,16 @@ public class MainActivity extends AppCompatActivity {
 //                        for(KnowledgeNode n: nodes) {
 //                            System.out.println(n);
 //                        }
-//                        System.out.println("Search result contains " + nodes.size() + "entries.");
+                        System.out.println("Search result contains " + nodes.size() + " entries.");
 
 
                         // Covid event list
-                        List<String> classes = CovidEvent.getClassNames();
-                        System.out.println("Class names: " + String.join(", ", classes));
-                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
-                        for(CovidEvent e: class1)
-                            System.out.println(e);
-                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+//                        List<String> classes = CovidEvent.getClassNames();
+//                        System.out.println("Class names: " + String.join(", ", classes));
+//                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
+//                        for(CovidEvent e: class1)
+//                            System.out.println(e);
+//                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
                     }
                 }).start();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
