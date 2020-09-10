@@ -15,7 +15,7 @@ import java.util.Date;
 //@Fts4(tokenizer = FtsOptions.TOKENIZER_SIMPLE)
 @Entity(tableName = "news_table")
 //        indices = {@Index(value = {"id"}, unique = true)})
-public class News implements Comparable<News> {
+public class  News implements Comparable<News> {
 
     public static final int EN = 0;
     public static final int ZH = 1;

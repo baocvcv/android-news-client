@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 //                        for(KnowledgeNode n: nodes) {
 //                            System.out.println(n);
 //                        }
-                        System.out.println("Search result contains " + nodes.size() + "entries.");
+//                        System.out.println("Search result contains " + nodes.size() + "entries.");
 
 
                         // Covid event list

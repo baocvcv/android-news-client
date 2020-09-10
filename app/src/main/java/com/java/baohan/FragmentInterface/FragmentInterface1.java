@@ -50,9 +50,12 @@ public class FragmentInterface1 extends Fragment {
         super.onDetach();
         mcontext = null;
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_interface1,container,false);
+
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
+
         tabLayout=view.findViewById(R.id.tab_layout);
 
         if (fragmentList.size() == 0) {

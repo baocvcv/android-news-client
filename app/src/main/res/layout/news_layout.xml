@@ -9,23 +9,32 @@
     <!-- 刷新提示区 -->
 
     <!-- /刷新提示区 -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="60dp"/>
 
 
     <!-- 内容列表区 -->
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_marginTop="0dp"
         android:orientation="vertical"
         android:background="#FFF">
 
-        <ListView
-            android:id="@+id/listview"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:scrollbarSize="1dp"
-            android:layout_width="match_parent"    >
-        </ListView>
+            android:scrollbarStyle="outsideOverlay" />
+
 
 
     </LinearLayout>
