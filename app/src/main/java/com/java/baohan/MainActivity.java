@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         System.out.println("Got " + result.size() + " results");
 //                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
+                        result = mNewsViewModel.searchRecentNews("疫苗");
+                        System.out.println("Search for 疫苗 " + " got " + result.size() + " results");
 
                         // view search history
                         System.out.print("Search history: ");

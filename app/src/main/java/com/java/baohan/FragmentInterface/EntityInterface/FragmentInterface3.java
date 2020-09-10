@@ -208,10 +208,10 @@ public class FragmentInterface3 extends Fragment {
             @Override
             public void onClick(View view) {
                 int v = entity.findViewById(R.id.relation_layout).getVisibility();
-                if(n.intro != null)
-                    entity.findViewById(R.id.entity_wiki).setVisibility(8 - v);
                 if(n.img != null)
                     entity.findViewById(R.id.entity_img).setVisibility(8 - v);
+                if(n.intro != null)
+                    entity.findViewById(R.id.entity_wiki).setVisibility(8 - v);
                 if(n.relations != null)
                     entity.findViewById(R.id.relation_layout).setVisibility(8 - v);
                 if(n.properties != null)
@@ -219,10 +219,10 @@ public class FragmentInterface3 extends Fragment {
             }
         });
         if(visible) {
-            if (n.intro != null)
-                entity.findViewById(R.id.entity_wiki).setVisibility(View.VISIBLE);
             if (n.img != null)
                 entity.findViewById(R.id.entity_img).setVisibility(View.VISIBLE);
+            if (n.intro != null)
+                entity.findViewById(R.id.entity_wiki).setVisibility(View.VISIBLE);
             if (n.relations != null)
                 entity.findViewById(R.id.relation_layout).setVisibility(View.VISIBLE);
             if (n.properties != null)

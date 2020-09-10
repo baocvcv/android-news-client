@@ -75,9 +75,9 @@ public class KnowledgeNode {
             }
 
             Thread t = null;
-            if(!info.isNull("img")) {
+            if(!jsonObject.isNull("img")) {
                 // load image async
-                String imgURL = info.getString("img");
+                String imgURL = jsonObject.getString("img");
                 t = new Thread(new Runnable() {
                     @Override
                     public void run() {
