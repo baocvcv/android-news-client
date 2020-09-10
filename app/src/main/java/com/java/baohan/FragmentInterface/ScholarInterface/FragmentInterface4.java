@@ -1,4 +1,4 @@
-package com.java.baohan.FragmentInterface;
+package com.java.baohan.FragmentInterface.ScholarInterface;
 
 import androidx.fragment.app.Fragment;
 

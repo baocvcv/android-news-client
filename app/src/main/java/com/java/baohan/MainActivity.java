@@ -27,8 +27,8 @@ import com.java.baohan.ui.main.SectionsPagerAdapter;
 
 import com.java.baohan.FragmentInterface.FragmentInterface1;
 import com.java.baohan.FragmentInterface.dataInterface.FragmentInterface2;
-import com.java.baohan.FragmentInterface.FragmentInterface3;
-import com.java.baohan.FragmentInterface.FragmentInterface4;
+import com.java.baohan.FragmentInterface.EntityInterface.FragmentInterface3;
+import com.java.baohan.FragmentInterface.ScholarInterface.FragmentInterface4;
 
 import java.util.ArrayList;
 import java.util.List;
