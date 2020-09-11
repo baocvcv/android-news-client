@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +41,7 @@ public class FragmentInterface3 extends Fragment {
     private LinearLayout searchResult;
     private TextView searchInfo;
     private View loadingPanel;
+    private View currentView;
 
     private static ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
@@ -60,6 +62,7 @@ public class FragmentInterface3 extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_entity_search, container, false);
+        currentView = root;
         root.findViewById(R.id.search_loading_panel).setVisibility(View.GONE);
         queryInput = root.findViewById(R.id.search_query);
         searchResult = root.findViewById(R.id.search_result);
@@ -293,6 +296,8 @@ public class FragmentInterface3 extends Fragment {
             updateMst(String.format("Found %d results in %.3f seconds.", result == null ? 0 : result.size(), dt));
             setLoadingPanelVisible(false);
             updateView(result);
+            queryInput.clearFocus();
+            ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(currentView.getWindowToken(), 0);
         }
     }
 }

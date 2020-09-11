@@ -69,17 +69,22 @@ public class FragmentInterface4 extends Fragment {
 
     public void loadData() {
         fragments.clear();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List < Scholar > deadScholars = Scholar.getDeadScholars().entrySet().stream()
+                        .sorted((e1, e2) -> e2.getValue().numViewed - e1.getValue().numViewed)
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.toList());
+                fragments.add(ScholarListFragment.newInstance(deadScholars));
+            }
+        }).start();
+
         List<Scholar> livingScholars = Scholar.getAliveScholars().entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().numViewed - e1.getValue().numViewed)
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
-        fragments.add(ScholarListFragment.newInstance(livingScholars));
-
-        List<Scholar> deadScholars = Scholar.getDeadScholars().entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().numViewed - e1.getValue().numViewed)
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
-        fragments.add(ScholarListFragment.newInstance(deadScholars));
+        fragments.add(0, ScholarListFragment.newInstance(livingScholars));
     }
 
     class ScholarFragmentAdapter extends FragmentPagerAdapter {

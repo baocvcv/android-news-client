@@ -97,13 +97,16 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
                 cacheList = allNews.getValue();
                 break;
             case "疫苗研发":
-                cacheEventList = CovidEvent.getEventList(0);
+                if(CovidEvent.eventList != null)
+                    cacheEventList = CovidEvent.getEventList(0);
                 break;
             case "病毒研究":
-                cacheEventList = CovidEvent.getEventList(1);
+                if(CovidEvent.eventList != null)
+                    cacheEventList = CovidEvent.getEventList(1);
                 break;
             case "临床治疗":
-                cacheEventList = CovidEvent.getEventList(2);
+                if(CovidEvent.eventList != null)
+                    cacheEventList = CovidEvent.getEventList(2);
                 break;
         }
     }

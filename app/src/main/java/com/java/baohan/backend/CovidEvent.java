@@ -43,6 +43,8 @@ public class CovidEvent {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
 
     public static List<CovidEvent> getEventList(int classNum) {
+        if(eventList == null)
+            return null;
         return eventList.getOrDefault(classNum, null);
     }
 
