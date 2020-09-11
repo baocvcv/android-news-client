@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,10 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.java.baohan.R;
+import com.java.baohan.backend.CovidEvent;
 import com.java.baohan.backend.NewsViewModel;
 import com.java.baohan.ui.main.NewsActivity;
 import com.java.baohan.ui.main.TableSetActivity;
@@ -38,22 +42,12 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentInterface1 extends Fragment {
     private static FragmentInterface1 instance = null;
     private NewsViewModel newsViewModel;
-    private FragmentInterface1() { }
 
-    public FragmentInterface1(NewsViewModel m) {
-        newsViewModel = m;
-    }
-
-    public static FragmentInterface1 getInstance(NewsViewModel m) {
-        if (instance == null) {
-            instance = new FragmentInterface1(m);
-        }
-        return instance;
-    }
+    public FragmentInterface1() { }
 
     public static FragmentInterface1 getInstance() {
         if (instance == null) {
-            return null;
+            instance = new FragmentInterface1();
         }
         return instance;
     }
@@ -83,11 +77,12 @@ public class FragmentInterface1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         fragmentList.clear();
         fragmentList.add(new FragmentInterface1_sub("搜索"));
         fragmentList.add(new FragmentInterface1_sub("news"));
         fragmentList.add(new FragmentInterface1_sub("papers"));
-        fragmentList.add(new FragmentInterface1_sub("收藏"));
+        fragmentList.add(new FragmentInterface1_sub("疫苗研发"));
         for(int i=0;i<fragmentList.size();i++)
         {
             tableList.add(fragmentList.get(i).getKeyWord());
@@ -102,8 +97,9 @@ public class FragmentInterface1 extends Fragment {
         setButton=view.findViewById(R.id.set_button);
 
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        p.setMargins(3, 2, 2, 3);
+        p.setMargins(40, 2, 2, 40);
 
+        View hll = view.findViewById(R.id.history_list_layout);
         LinearLayout searchHistoryLayout = view.findViewById(R.id.history_list);
         EditText searchInput = view.findViewById(R.id.search_text_fg1);
         searchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -120,20 +116,39 @@ public class FragmentInterface1 extends Fragment {
                         tv.setBackgroundColor(Color.rgb(212,232,246));
                         tv.setLayoutParams(p);
                         searchHistoryLayout.addView(tv);
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String s = tv.getText().toString();
+                                fragmentList.get(0).search(s);
+                                searchInput.setText(s);
+                                searchInput.clearFocus();
+                                hll.setVisibility(View.GONE);
+                                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                viewPager.setCurrentItem(0);
+                                //TODO
+                            }
+                        });
                     }
-                    searchHistoryLayout.setVisibility(View.VISIBLE);
+                    hll.setVisibility(View.VISIBLE);
                 } else {
-                    searchHistoryLayout.setVisibility(View.GONE);
+                    hll.setVisibility(View.GONE);
                 }
             }
         });
-
 
         searchButton=view.findViewById(R.id.search_button_fg1);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: search
+                String s = searchInput.getText().toString().trim();
+                if(!s.isEmpty()) {
+                    fragmentList.get(0).search(s);
+                    searchInput.clearFocus();
+                    ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    viewPager.setCurrentItem(0);
+                    //TODO
+                }
             }
         });
 
@@ -149,18 +164,28 @@ public class FragmentInterface1 extends Fragment {
             {
                 int sizeList=fragmentList.size();
                 Intent intent = new Intent(getActivity(), TableSetActivity.class);
-                intent.putExtra("num",sizeList+"");
+                intent.putExtra("num",(sizeList-1)+"");
 
-                int i=0;
-                for(;i<sizeList;i++){
+                for(int i = 1;i<sizeList;i++){
                     String na="list"+String.valueOf(i);
-                    intent.putExtra("list"+i,fragmentList.get(i).getKeyWord());
+                    intent.putExtra("list"+(i-1),fragmentList.get(i).getKeyWord());
                 }
 
                 startActivityForResult(intent, 1);
             }
         });
 
+        Button btnCancel = view.findViewById(R.id.btn_cancel_search);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchInput.clearFocus();
+                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
+
+        if(fragmentList.size() > 1)
+            viewPager.setCurrentItem(1);
         return view;
     }
 
@@ -171,10 +196,15 @@ public class FragmentInterface1 extends Fragment {
         if(resultCode==3) {
             switch (requestCode) {
                 case 1:
-                    fragmentList.clear();
-                    tableList.clear();
+                    while(fragmentList.size() > 1){
+                        fragmentList.remove(1);
+                        tableList.remove(1);
+                    }
+                    for(FragmentInterface1_sub f: fragmentList) {
+                        System.out.println(f.getKeyWord());
+                    }
                     String tmp = intent.getStringExtra("num");
-                    System.out.println(tmp+"-------------------------------------------------------------------");
+//                    System.out.println(tmp+"-------------------------------------------------------------------");
                     //Toast.makeText(getActivity(),tmp+"",Toast.LENGTH_SHORT).show();
                     int sizeList = Integer.parseInt(tmp);
                     for(int i=0;i<sizeList;i++)
@@ -186,7 +216,6 @@ public class FragmentInterface1 extends Fragment {
 
                     mAdapter.notifyDataSetChanged();
                     break;
-
             }
         }
     }

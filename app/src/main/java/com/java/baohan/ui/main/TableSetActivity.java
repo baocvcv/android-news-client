@@ -31,8 +31,7 @@ public class TableSetActivity extends AppCompatActivity {
     private ListView listView2;
 
     public void intiStandardList(){
-        standardList.add("搜索");
-        standardList.add("收藏");
+//        standardList.add("搜索");
         standardList.add("news");
         standardList.add("papers");
         List<String> classes = CovidEvent.getClassNames();

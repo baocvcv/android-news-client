@@ -24,11 +24,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class NewsViewModel extends AndroidViewModel {
 
@@ -58,7 +61,7 @@ public class NewsViewModel extends AndroidViewModel {
     private static ConcurrentHashMap<String, News> recentNewsCache;
 
     private static final String SEARCH_HISTORY_FILE = "searchHistory.txt";
-    private static List<String> searchHistory;
+    private static LinkedHashSet<String> searchHistory;
 
     /*
     Public methods
@@ -82,7 +85,7 @@ public class NewsViewModel extends AndroidViewModel {
         }).start();
 
         // load search history
-        searchHistory = new LinkedList<>();
+        searchHistory = new LinkedHashSet<>();
         try (Scanner scanner = new Scanner(app.openFileInput(SEARCH_HISTORY_FILE))) {
             while (scanner.hasNextLine()) {
                 searchHistory.add(scanner.nextLine());
@@ -121,7 +124,7 @@ public class NewsViewModel extends AndroidViewModel {
     }
 
     public List<News> searchRecentNews(String keyword) {
-        searchHistory.add(0, keyword);
+        searchHistory.add(keyword);
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(app.openFileOutput(SEARCH_HISTORY_FILE, app.MODE_PRIVATE)))) {
             for (String s: searchHistory)
                 writer.write(s + "\n");
@@ -138,7 +141,9 @@ public class NewsViewModel extends AndroidViewModel {
     }
 
     public List<String> getSearchHistory() {
-        return searchHistory;
+        List<String> ret = searchHistory.stream().collect(Collectors.toList());
+        Collections.reverse(ret);
+        return ret;
     }
 
     /*

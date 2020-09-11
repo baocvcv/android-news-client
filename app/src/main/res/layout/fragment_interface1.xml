@@ -93,14 +93,24 @@
                 android:layout_marginTop="2dp"
                 android:src="@drawable/search"
                 app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+
         </RelativeLayout>
     </LinearLayout>
     <!-- /固定顶部 -->
 
     <LinearLayout
+        android:id="@+id/history_list_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_cancel_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F1C7C7"
+            android:text="取消" />
 
         <TextView
             android:id="@+id/textView16"
@@ -122,6 +132,7 @@
             android:visibility="visible">
 
         </LinearLayout>
+
     </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
