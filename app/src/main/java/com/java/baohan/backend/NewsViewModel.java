@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 
 public class NewsViewModel extends AndroidViewModel {
 
-    private NewsRepository repo;
-    private LiveData<List<News>> allNews;
-    private LiveData<List<News>> allPapers;
+    private static NewsRepository repo = null;
+    private static LiveData<List<News>> allNews;
+    private static LiveData<List<News>> allPapers;
 
     private Application app;
 
@@ -69,20 +69,24 @@ public class NewsViewModel extends AndroidViewModel {
     public NewsViewModel (Application app) {
         super(app);
         this.app = app;
-        repo = new NewsRepository(app);
+        if (repo == null)
+            repo = new NewsRepository(app);
         allNews = repo.getAllNews();
         allPapers = repo.getAllPapers();
 
-        recentNewsCache = new ConcurrentHashMap<>();
-        // cache news for search
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    updateCache();
-                } catch (Exception e) {}
-            }
-        }).start();
+        if(recentNewsCache == null) {
+            recentNewsCache = new ConcurrentHashMap<>();
+            // cache news for search
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        updateCache();
+                    } catch (Exception e) {
+                    }
+                }
+            }).start();
+        }
 
         // load search history
         searchHistory = new LinkedHashSet<>();
@@ -90,7 +94,8 @@ public class NewsViewModel extends AndroidViewModel {
             while (scanner.hasNextLine()) {
                 searchHistory.add(scanner.nextLine());
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public LiveData<List<News>> getAllPapers() {
@@ -101,11 +106,11 @@ public class NewsViewModel extends AndroidViewModel {
         return allNews;
     }
 
-    public void updateNews() {
+    public static void updateNews() {
         updateNews(false);
     }
 
-    public void updatePapers() {
+    public static void updatePapers() {
         updateNews(true );
     }
 
@@ -149,7 +154,7 @@ public class NewsViewModel extends AndroidViewModel {
     /*
         Private methods
          */
-    private void updateNews(boolean isPaper) {
+    private static void updateNews(boolean isPaper) {
         // retrieve news and save in database
         String type;
         if (isPaper) {
@@ -169,7 +174,7 @@ public class NewsViewModel extends AndroidViewModel {
         }
     }
 
-    private void retrieveOld(boolean isPaper) {
+    private static void retrieveOld(boolean isPaper) {
         // retrieve old news and save in database
         String type;
         LiveData<List<News>> collection;
@@ -220,7 +225,7 @@ public class NewsViewModel extends AndroidViewModel {
         }
     }
 
-    private InputStream getInputStream(URL url) throws Exception {
+    private static InputStream getInputStream(URL url) throws Exception {
         HttpURLConnection conn;
         conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(60 * 1000);
@@ -233,7 +238,7 @@ public class NewsViewModel extends AndroidViewModel {
         return conn.getInputStream();
     }
 
-    private List<News> parse(InputStream is) throws Exception {
+    private static List<News> parse(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line;

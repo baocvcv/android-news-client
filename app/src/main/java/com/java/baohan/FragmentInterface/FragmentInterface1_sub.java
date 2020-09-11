@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.RenderNode;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -103,17 +104,39 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
     }
 
     public void addData() {
-        if(keyWord.equals("news"))
-            mNewsViewModel.updateNews();
-        else if (keyWord.equals("papers"))
-            mNewsViewModel.updatePapers();
+        if(keyWord.equals("news")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsViewModel.updateNews();
+                }
+            }).start();
+        } else if (keyWord.equals("papers")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsViewModel.updatePapers();
+                }
+            }).start();
+        }
     }
 
     public void freshData(){
-        if(keyWord.equals("news"))
-            mNewsViewModel.retrieveOldNews();
-        else if (keyWord.equals("papers"))
-            mNewsViewModel.retrieveOldPapers();
+        if(keyWord.equals("news")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsViewModel.retrieveOldNews();
+                }
+            }).start();
+        } else if (keyWord.equals("papers")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsViewModel.retrieveOldPapers();
+                }
+            }).start();
+        }
     }
 
     public void search(String query){
@@ -125,6 +148,7 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
     }
 
 
+    int curScrollPosition = 0;
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //view
         View view=inflater.inflate(R.layout.news_layout,container,false);
@@ -150,11 +174,19 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
             mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
                 @Override
                 public void onLoadMore() {
-                    addData();
+                    freshData();
                 }
                 @Override
                 public void onFresh() {
-                    freshData();
+                    addData();
+//                    LinearLayoutManager manager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+//                    //获取最后一个完全显示的itemPosition
+//                    int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
+//                    curScrollPosition = manager.findFirstVisibleItemPosition();
+                }
+                @Override
+                public void doSmthing(int pos) {
+                    curScrollPosition = pos;
                 }
             });
 
@@ -173,6 +205,7 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
                             adapterDome.setList(cacheList);
                     } else {
                         adapterDome.setList(cacheList);
+                        manager.scrollToPosition(curScrollPosition);
                     }
                 }
             });
@@ -330,6 +363,8 @@ abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollList
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//        doSmthing(manager.findFirstCompletelyVisibleItemPosition());
+        doSmthing(manager.findLastVisibleItemPosition());
         // 当不滑动时
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
             //获取最后一个完全显示的itemPosition
@@ -348,6 +383,7 @@ abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollList
         }
 
     }
+
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
@@ -360,6 +396,7 @@ abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollList
      */
     public abstract void onFresh();
     public abstract void onLoadMore();
+    public abstract void doSmthing(int curPos);
 }
 
 

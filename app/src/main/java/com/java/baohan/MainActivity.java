@@ -74,8 +74,22 @@ public class MainActivity extends AppCompatActivity {
                 // update news
                 mNewsViewModel.updatePapers();
                 mNewsViewModel.updateNews();
+
             }
         }).start();
+
+        mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                System.out.println("News: " + news.size());
+            }
+        });
+        mNewsViewModel.getAllPapers().observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                System.out.println("Papers: " + news.size());
+            }
+        });
 
         new Thread(new Runnable() {
             @Override
@@ -143,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Network activity must not be run in the main thread
                 // so it is necessary to create a new thread to run update tasks
+                System.out.println(mNewsViewModel.getAllNews().getValue().size());
+                System.out.println(mNewsViewModel.getAllPapers().getValue().size());
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -184,21 +200,21 @@ public class MainActivity extends AppCompatActivity {
 
 
                         // request for knowledge graph
-                        List<KnowledgeNode> nodes = KnowledgeGraph.search("病毒");
+//                        List<KnowledgeNode> nodes = KnowledgeGraph.search("病毒");
 //                        for(KnowledgeNode n: nodes) {
 //                            System.out.println(n);
 //                        }
-                        System.out.println("Search result contains " + nodes.size() + " entries.");
+//                        System.out.println("Search result contains " + nodes.size() + " entries.");
 
 
                         // Covid event list
-                        List<String> classes = CovidEvent.getClassNames();
-                        System.out.println("Class names: " + String.join(", ", classes));
-                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
+//                        List<String> classes = CovidEvent.getClassNames();
+//                        System.out.println("Class names: " + String.join(", ", classes));
+//                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
 //                        for(CovidEvent e: class1)
 //                            System.out.println(e);
-                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
-                        System.out.println("There are " + CovidEvent.eventList.size() + " classes");
+//                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+//                        System.out.println("There are " + CovidEvent.eventList.size() + " classes");
                     }
 
                 }).start();
