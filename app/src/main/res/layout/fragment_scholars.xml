@@ -5,36 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/scholar_loading_panel"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_weight="15"-->
-<!--        android:gravity="center">-->
+    <RelativeLayout
+        android:id="@+id/scholar_loading_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="15"
+        android:gravity="center">
 
-<!--        <ProgressBar-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:indeterminate="true" />-->
-<!--    </RelativeLayout>-->
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:id="@+id/tab_scholars"
-        android:layout_margin="1dp"
-        android:paddingHorizontal="2dp"
-        android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:id="@+id/tab_scholars"
+            android:layout_margin="1dp"
+            android:paddingHorizontal="2dp"
+            android:layout_height="wrap_content"/>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager_scholars"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:padding="8dp" />
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager_scholars"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:padding="8dp" />
     </LinearLayout>
 </RelativeLayout>

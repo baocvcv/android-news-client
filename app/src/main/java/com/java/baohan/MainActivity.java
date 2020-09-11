@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
@@ -91,11 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 // update news
                 mNewsViewModel.updatePapers();
                 mNewsViewModel.updateNews();
-
-                // download scholar info
-                Scholar.cacheScholars();
-
-                System.out.println("Finished startup tasks...");
             }
         }).start();
 
@@ -104,6 +100,30 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 // cache pandemic data
                 PandemicData.updateDataCache();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.detach(fragment2);
+                fragmentTransaction.attach(fragment2);
+                fragmentTransaction.commit();
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // download scholar info
+                Scholar.cacheScholars();
+                while(Scholar.executor.getTaskCount() != Scholar.executor.getCompletedTaskCount()) {
+                    try {
+                        Thread.sleep(5);
+                    } catch (Exception e) {}
+                }
+                fragment4.loadData();
+                if(getSupportFragmentManager().getFragments().contains(fragment4)) {
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.detach(fragment4);
+                    fragmentTransaction.attach(fragment4);
+                    fragmentTransaction.commit();
+                }
             }
         }).start();
 

@@ -63,6 +63,7 @@ public class FragmentInterface1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragmentList.clear();
         fragmentList.add(new FragmentInterface1_sub());
         fragmentList.add(new FragmentInterface1_sub());
         fragmentList.add(new FragmentInterface1_sub());

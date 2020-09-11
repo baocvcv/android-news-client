@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -44,6 +46,31 @@ public class FragmentInterface4 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_scholars, container, false);
+        if(fragments.isEmpty()) {
+            return root;
+        }
+
+        TabLayout tab = root.findViewById(R.id.tab_scholars);
+        ViewPager pager = (ViewPager) root.findViewById(R.id.pager_scholars);
+        ScholarFragmentAdapter adapter = new ScholarFragmentAdapter(getChildFragmentManager(), getContext(), fragments);
+        pager.setAdapter(adapter);
+        tab.setupWithViewPager(pager);
+        for(int i = 0; i < titles.length; i++)
+            tab.getTabAt(i).setText(titles[i]);
+
+        root.findViewById(R.id.scholar_loading_panel).setVisibility(View.GONE);
+        return root;
+    }
+
+    public void loadData() {
+        fragments.clear();
         List<Scholar> livingScholars = Scholar.getAliveScholars().entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().numViewed - e1.getValue().numViewed)
                 .map(Map.Entry::getValue)
@@ -57,26 +84,7 @@ public class FragmentInterface4 extends Fragment {
         fragments.add(ScholarListFragment.newInstance(deadScholars));
     }
 
-    @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_scholars, container, false);
-        TabLayout tab = root.findViewById(R.id.tab_scholars);
-        ViewPager pager = (ViewPager) root.findViewById(R.id.pager_scholars);
-        ScholarFragmentAdapter adapter = new ScholarFragmentAdapter(this.getActivity().getSupportFragmentManager(), getContext(), fragments);
-        pager.setAdapter(adapter);
-        tab.setupWithViewPager(pager);
-        for(int i = 0; i < titles.length; i++)
-            tab.getTabAt(i).setText(titles[i]);
-
-//        root.findViewById(R.id.scholar_loading_panel).setVisibility(View.GONE);
-
-        return root;
-    }
-
     class ScholarFragmentAdapter extends FragmentPagerAdapter {
-
 
         Context context;
         List<Fragment> fragments;

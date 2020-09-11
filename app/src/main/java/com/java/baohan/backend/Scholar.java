@@ -118,26 +118,19 @@ public class Scholar {
             // load avatar
             String avatarURL = rawData.getString("avatar");
             Thread t = null;
-            //TODO: create a task queue for retrieving images, avoid having to wait for image to download
             if (!avatarURL.isEmpty()) {
-                // load image async
-//                t = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            s.avatar = BitmapFactory.decodeStream(new URL(avatarURL).openConnection().getInputStream());
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                t.start();
                 s.hasAvatar = true;
                 executor.submit(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            s.avatar = BitmapFactory.decodeStream(new URL(avatarURL).openConnection().getInputStream());
+                            Bitmap m = BitmapFactory.decodeStream(new URL(avatarURL).openConnection().getInputStream());
+                            int width = m.getWidth();
+                            if (width > 300) {
+                                double ratio = width * 1.0 / 300;
+                                m = Bitmap.createScaledBitmap(m, 300, (int)(m.getHeight() / ratio), true);
+                            }
+                            s.avatar = m;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -182,8 +175,6 @@ public class Scholar {
                 }
             }
 
-//            if (t != null)
-//                t.join();
             if (s.isAlive) {
                 aliveScholars.put(s.id, s);
             } else {

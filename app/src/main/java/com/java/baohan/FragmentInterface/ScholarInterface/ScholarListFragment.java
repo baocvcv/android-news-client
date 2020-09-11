@@ -106,17 +106,7 @@ public class ScholarListFragment extends Fragment {
 //        View root = inflater.inflate(R.layout.scholar_brief, container, false);
         ImageView avatar = root.findViewById(R.id.scholar_avatar);
         if(s.hasAvatar) {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    while(Scholar.executor.getCompletedTaskCount() != Scholar.executor.getTaskCount()) {
-                        try {
-                            Thread.sleep(5);
-                        } catch (Exception e) {}
-                    }
-                    avatar.setImageBitmap(s.avatar);
-                }
-            });
+            avatar.setImageBitmap(s.avatar);
         } else {
             avatar.setVisibility(View.GONE);
         }
