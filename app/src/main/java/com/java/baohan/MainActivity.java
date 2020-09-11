@@ -83,12 +83,10 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 // cache pandemic data
                 PandemicData.updateDataCache();
-                if(getSupportFragmentManager().getFragments().contains(fragment2)) {
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.detach(fragment2);
-                    fragmentTransaction.attach(fragment2);
-                    fragmentTransaction.commit();
-                }
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.detach(fragment2);
+                fragmentTransaction.attach(fragment2);
+                fragmentTransaction.commit();
             }
         }).start();
 
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(2);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -140,13 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
         // load covid event list
         CovidEvent.loadEventList(app);
-
-        if(isConnected()) {
-            // Required startup tasks for backend
-            initTasks();
-        } else {
-            Toast.makeText(getApplicationContext(), "无网络连接", Toast.LENGTH_LONG).show();
-        }
 
         // interfaces
         fab.setOnClickListener(new View.OnClickListener() {
@@ -221,11 +212,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(isConnected()) {
+            // Required startup tasks for backend
+            initTasks();
+        } else {
+            Toast.makeText(getApplicationContext(), "无网络连接", Toast.LENGTH_LONG).show();
+        }
+    }
 
     boolean isConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
