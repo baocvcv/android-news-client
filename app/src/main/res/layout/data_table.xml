@@ -67,7 +67,7 @@
             android:layout_marginLeft="1dp"
             android:background="#EAEFDD"
             android:padding="5dp"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
 
         <TextView
@@ -76,8 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
             android:padding="5dp"
+            android:text="NaN"
             android:background="#EAEFDD"
-            android:text="TextView"
             android:textAlignment="center" />
 
         <TextView
@@ -87,7 +87,7 @@
             android:layout_marginLeft="1dp"
             android:padding="5dp"
             android:background="#EAEFDD"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:layout_marginLeft="1dp"
             android:background="#EAEFDD"
             android:padding="5dp"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
     </TableRow>
 
@@ -161,7 +161,7 @@
             android:background="#EAEFDD"
             android:layout_marginLeft="1dp"
             android:padding="5dp"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
 
         <TextView
@@ -171,7 +171,7 @@
             android:layout_marginLeft="1dp"
             android:background="#EAEFDD"
             android:padding="5dp"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
 
         <TextView
@@ -181,7 +181,7 @@
             android:background="#EAEFDD"
             android:layout_marginLeft="1dp"
             android:padding="5dp"
-            android:text="TextView"
+            android:text="NaN"
             android:textAlignment="center" />
 
         <TextView
@@ -190,8 +190,8 @@
             android:layout_height="wrap_content"
             android:background="#EAEFDD"
             android:layout_marginLeft="1dp"
+            android:text="NaN"
             android:padding="5dp"
-            android:text="TextView"
             android:textAlignment="center" />
     </TableRow>
 

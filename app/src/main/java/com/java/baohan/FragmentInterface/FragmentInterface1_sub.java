@@ -3,6 +3,7 @@ package com.java.baohan.FragmentInterface;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.java.baohan.model.News;
 import com.java.baohan.ui.main.NewsActivity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,24 +172,33 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
             }
         }
 
+        private SimpleDateFormat formatter = new SimpleDateFormat("MM-dd");
+        private SimpleDateFormat formatter_year = new SimpleDateFormat("yyyy-MM-dd");
+
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
             //将数据和控件绑定
             final int MAX_TITLE_LEN = 16;
             News n = list.get(position);
             String title_disp = n.title.length() < MAX_TITLE_LEN ? n.title : n.title.substring(0, MAX_TITLE_LEN);
-            holder.textView.setText(title_disp + "\n" + n.time);
+            holder.title.setText(title_disp);
+            holder.date.setText(formatter.format(n.time));
+            if(n.isRead) {
+                holder.title.setBackgroundColor(Color.rgb(220, 220, 220));
+                holder.date.setBackgroundColor(Color.rgb(220, 220, 220));
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
+                    mNewsViewModel.markRead(n);
                     Intent intent = new Intent(mcontext, NewsActivity.class);
                     intent.putExtra("title", n.title);
-                    intent.putExtra("time", n.time.toString());
+                    intent.putExtra("time", formatter_year.format(n.time));
                     intent.putExtra("content",n.content);
                     startActivityForResult(intent, 1);
-                    Toast.makeText(context, n.id, Toast.LENGTH_SHORT).show();
-
+                    notifyDataSetChanged();
+//                    Toast.makeText(context, n.id, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -203,11 +214,13 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
 
         //内部类，绑定控件
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView textView;
+            TextView title;
+            TextView date;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
-                textView = (TextView) itemView.findViewById(R.id.text_view);
+                title = (TextView) itemView.findViewById(R.id.news_title_brief);
+                date = (TextView) itemView.findViewById(R.id.news_date_brief);
             }
         }
 
@@ -220,7 +233,6 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
     }
 
 }
-
 
 
 abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {

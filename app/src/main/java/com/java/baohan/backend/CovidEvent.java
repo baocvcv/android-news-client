@@ -36,7 +36,7 @@ public class CovidEvent {
         this.url = url;
     }
 
-    private static Map<Integer, List<CovidEvent>> eventList = null;
+    public static Map<Integer, List<CovidEvent>> eventList = null;
     private static List<String> classNames;
     private static int numClasses;
 //    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;

@@ -14,7 +14,6 @@ import com.java.baohan.R;
 import com.java.baohan.model.News;
 
 public class NewsActivity extends AppCompatActivity {
-    News news;
     Button buttonGoBack;
     TextView titleView;
     TextView timeView;
@@ -47,6 +46,26 @@ public class NewsActivity extends AppCompatActivity {
             }
         });
 
+        Button btn = findViewById(R.id.button_share);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent share_intent = new Intent();
+                share_intent.setAction(Intent.ACTION_SEND);//设置分享行为
+                share_intent.setType("text/plain");//设置分享内容的类型
+                share_intent.putExtra(Intent.EXTRA_SUBJECT, title);//添加分享内容标题
+                String msg;
+                if(content.length() > 20) {
+                    msg = content.substring(0, 60);
+                } else {
+                    msg = content;
+                }
+                share_intent.putExtra(Intent.EXTRA_TEXT, msg);//添加分享内容
+                //创建分享的Dialog
+                share_intent = Intent.createChooser(share_intent, title);
+                startActivity(share_intent);
+            }
+        });
     }
 
 }

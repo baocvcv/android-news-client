@@ -1,6 +1,9 @@
 package com.java.baohan;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.content.Intent;
 
@@ -9,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.fragment.app.Fragment;
@@ -82,33 +86,54 @@ public class MainActivity extends AppCompatActivity {
         Demonstration of NewsViewModel
          */
 
-
         // Required startup tasks for backend
         app = this.getApplication();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // load covid event list
-                CovidEvent.loadEventList(app);
+        if(isConnected()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // load covid event list
+                    CovidEvent.loadEventList(app);
 
-                // update news
-                mNewsViewModel.updatePapers();
-                mNewsViewModel.updateNews();
+                    // update news
+                    mNewsViewModel.updatePapers();
+                    mNewsViewModel.updateNews();
+                }
+            }).start();
 
-                // download scholar info
-                Scholar.cacheScholars();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // cache pandemic data
+                    PandemicData.updateDataCache();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.detach(fragment2);
+                    fragmentTransaction.attach(fragment2);
+                    fragmentTransaction.commit();
+                }
+            }).start();
 
-                System.out.println("Finished startup tasks...");
-            }
-        }).start();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // cache pandemic data
-                PandemicData.updateDataCache();
-            }
-        }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // download scholar info
+                    Scholar.cacheScholars();
+                    while (Scholar.executor.getTaskCount() != Scholar.executor.getCompletedTaskCount()) {
+                        try {
+                            Thread.sleep(5);
+                        } catch (Exception e) {
+                        }
+                    }
+                    fragment4.loadData();
+                    if (getSupportFragmentManager().getFragments().contains(fragment4)) {
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.detach(fragment4);
+                        fragmentTransaction.attach(fragment4);
+                        fragmentTransaction.commit();
+                    }
+                }
+            }).start();
+        }
 
         // interfaces
         fab.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
                         //}
                         //System.out.println("Got " + result.size() + " results");
 //                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
+                        result = mNewsViewModel.searchRecentNews("疫苗");
+                        System.out.println("Search for 疫苗 " + " got " + result.size() + " results");
 
                         // view search history
                         //System.out.print("Search history: ");
@@ -165,11 +192,13 @@ public class MainActivity extends AppCompatActivity {
                         // Covid event list
                         List<String> classes = CovidEvent.getClassNames();
                         System.out.println("Class names: " + String.join(", ", classes));
-//                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
+                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
 //                        for(CovidEvent e: class1)
 //                            System.out.println(e);
-//                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+                        System.out.println("There are " + CovidEvent.eventList.size() + " classes");
                     }
+
                 }).start();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -201,15 +230,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
+    boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return (info != null && info.isConnected());
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         super.onActivityResult(requestCode,resultCode,intent);
         Fragment fragment = FragmentInterface1.getInstance();
-        String tmp = intent.getStringExtra("num");
-        System.out.println(tmp+"-------------------------------------------------------------------");
-        Toast.makeText(this,tmp+"",Toast.LENGTH_SHORT).show();
-        fragment.onActivityResult(requestCode,resultCode,intent);
+        String tmp = "";
+        if(intent != null && intent.hasExtra("num"))
+            tmp = intent.getStringExtra("num");
+//        Toast.makeText(this,tmp+"",Toast.LENGTH_SHORT).show();
+        if(resultCode == 1)
+            fragment.onActivityResult(requestCode,resultCode,intent);
     }
 
 }

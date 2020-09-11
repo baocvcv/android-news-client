@@ -61,8 +61,6 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
     private LineChart chart;
     private TextView tvX, tvY;
 
-    private FragmentInterface2() {}
-
     public static FragmentInterface2 getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FragmentInterface2();
@@ -75,12 +73,18 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
         //TODO: integrate this to start up
-        while(!mViewModel.dataReady) {
-            try {
-                Thread.sleep(1);
-            } catch (Exception e) {}
-        }
+//        while(!mViewModel.dataReady) {
+//            try {
+//                Thread.sleep(1);
+//            } catch (Exception e) {}
+//        }
+        if (!mViewModel.dataReady)
+            return;
 
+        loadData();
+    }
+
+    private void loadData() {
         // add charts
         ArrayList<Integer> xs;
         ArrayList<ArrayList<Integer>> ys;
@@ -98,6 +102,7 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
             ys.get(2).add(e.dead);
             ys.get(3).add(e.cured);
         }
+        fragments_world.clear();
         for (int i = 0; i < table_titles.length; i++)
             fragments_world.add(ChartFragment.newInstance(table_titles[i], xs, ys.get(i)));
 
@@ -114,6 +119,7 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
             ys.get(2).add(e.dead);
             ys.get(3).add(e.cured);
         }
+        fragments_china.clear();
         for (int i = 0; i < table_titles.length; i++)
             fragments_china.add(ChartFragment.newInstance(table_titles[i], xs, ys.get(i)));
     }
@@ -123,11 +129,15 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_interface2, container, false);
+        if(!mViewModel.dataReady)
+            return root;
+        else if (fragments_world.isEmpty())
+            loadData();
 
         // setup charts
         TabLayout tab = root.findViewById(R.id.charts_china);
         ViewPager pager = (ViewPager) root.findViewById(R.id.pager_china);
-        ChartFragmentAdapter adapter = new ChartFragmentAdapter(this.getActivity().getSupportFragmentManager(), getContext(), fragments_china);
+        ChartFragmentAdapter adapter = new ChartFragmentAdapter(getChildFragmentManager(), getContext(), fragments_china);
         pager.setAdapter(adapter);
         tab.setupWithViewPager(pager);
         for(int i = 0; i < table_titles.length; i++)
@@ -135,7 +145,7 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
 
         tab = root.findViewById(R.id.charts_world);
         pager = (ViewPager) root.findViewById(R.id.pager_world);
-        adapter = new ChartFragmentAdapter(this.getActivity().getSupportFragmentManager(), getContext(), fragments_world);
+        adapter = new ChartFragmentAdapter(getChildFragmentManager(), getContext(), fragments_world);
         pager.setAdapter(adapter);
         tab.setupWithViewPager(pager);
         for(int i = 0; i < table_titles.length; i++)

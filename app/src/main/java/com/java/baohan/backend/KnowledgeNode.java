@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class KnowledgeNode {
 
@@ -33,11 +35,15 @@ public class KnowledgeNode {
 
     public List<KnowledgeRelation> relations;
 
+    public boolean hasImg;
+
     public Bitmap img;
 
     public int hot;
 
     public  KnowledgeNode() {}
+
+    public static ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     public KnowledgeNode(String label, String url, String intro, Map<String, String> properties, List<KnowledgeRelation> relations, Bitmap img) {
         this.label = label;
@@ -46,6 +52,7 @@ public class KnowledgeNode {
         this.properties = properties;
         this.relations = relations;
         this.img = img;
+        this.hasImg = img != null;
     }
 
     public static KnowledgeNode parse(JSONObject jsonObject) {
@@ -74,11 +81,22 @@ public class KnowledgeNode {
                 ret.intro = wiki;
             }
 
-            Thread t = null;
-            if(!info.isNull("img")) {
+//            Thread t = null;
+            if(!jsonObject.isNull("img")) {
                 // load image async
-                String imgURL = info.getString("img");
-                t = new Thread(new Runnable() {
+                String imgURL = jsonObject.getString("img");
+//                t = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            ret.img = BitmapFactory.decodeStream(new URL(imgURL).openConnection().getInputStream());
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                t.start();
+                executor.submit(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -88,13 +106,14 @@ public class KnowledgeNode {
                         }
                     }
                 });
-                t.start();
+                ret.hasImg = true;
+            } else {
+                ret.hasImg = false;
             }
 
             // parse COVID
             JSONObject covid = info.getJSONObject("COVID");
             JSONObject rawProperties; // = covid.getJSONObject("properties");
-//            if (!covid.isNull("properties")) {
             if((rawProperties = covid.getJSONObject("properties")).length() > 0) {
                 ret.properties = new HashMap<>();
                 for(Iterator<String> it = rawProperties.keys(); it.hasNext(); ) {
@@ -103,8 +122,6 @@ public class KnowledgeNode {
                 }
             }
 
-//            if (!covid.isNull("relations")) {
-//                JSONArray rawRelations = covid.getJSONArray("relations");
             JSONArray rawRelations;
             if((rawRelations = covid.getJSONArray("relations")).length() > 0) {
                 ret.relations = new LinkedList<>();
@@ -114,8 +131,8 @@ public class KnowledgeNode {
                 }
             }
 
-            if (t != null) // wait for img to load
-                t.join();
+//            if (t != null) // wait for img to load
+//                t.join();
         } catch (Exception e) {
             e.printStackTrace();
         }

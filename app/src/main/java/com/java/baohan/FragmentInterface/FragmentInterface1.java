@@ -37,7 +37,7 @@ public class FragmentInterface1 extends Fragment {
     private NewsViewModel newsViewModel;
     private FragmentInterface1() { }
 
-    private FragmentInterface1(NewsViewModel m) {
+    public FragmentInterface1(NewsViewModel m) {
         newsViewModel = m;
     }
 
@@ -80,6 +80,7 @@ public class FragmentInterface1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragmentList.clear();
         fragmentList.add(new FragmentInterface1_sub("搜索"));
         fragmentList.add(new FragmentInterface1_sub("news"));
         fragmentList.add(new FragmentInterface1_sub("papers"));
