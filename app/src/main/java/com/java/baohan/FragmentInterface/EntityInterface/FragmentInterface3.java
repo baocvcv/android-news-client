@@ -1,6 +1,7 @@
 package com.java.baohan.FragmentInterface.EntityInterface;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -114,7 +115,7 @@ public class FragmentInterface3 extends Fragment {
         TextView entityName = entity.findViewById(R.id.entity_name);
         String label = n.label;
         for(int i = 0; i < n.hot; i++)
-            label += ""; //TODO: find a symbol for fire
+            label += ""; //""\uD83D"; //TODO: find a symbol for fire
         entityName.setText(label);
         TextView entityWiki = entity.findViewById(R.id.entity_wiki);
         if(n.intro != null) {
