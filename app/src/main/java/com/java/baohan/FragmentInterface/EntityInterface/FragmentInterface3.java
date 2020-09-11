@@ -35,8 +35,6 @@ public class FragmentInterface3 extends Fragment {
 
     private static FragmentInterface3 INSTANCE = null;
 
-    private FragmentInterface3() {}
-
     private EditText queryInput;
     private LinearLayout searchResult;
     private TextView searchInfo;

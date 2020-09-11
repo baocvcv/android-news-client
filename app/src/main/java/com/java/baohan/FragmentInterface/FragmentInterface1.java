@@ -37,7 +37,7 @@ public class FragmentInterface1 extends Fragment {
     private NewsViewModel newsViewModel;
     private FragmentInterface1() { }
 
-    private FragmentInterface1(NewsViewModel m) {
+    public FragmentInterface1(NewsViewModel m) {
         newsViewModel = m;
     }
 

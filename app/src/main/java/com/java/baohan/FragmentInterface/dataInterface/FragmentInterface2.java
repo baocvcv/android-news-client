@@ -61,8 +61,6 @@ public class FragmentInterface2 extends Fragment  implements OnChartValueSelecte
     private LineChart chart;
     private TextView tvX, tvY;
 
-    private FragmentInterface2() {}
-
     public static FragmentInterface2 getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FragmentInterface2();

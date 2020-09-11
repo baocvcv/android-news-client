@@ -190,11 +190,13 @@ public class MainActivity extends AppCompatActivity {
                         // Covid event list
                         List<String> classes = CovidEvent.getClassNames();
                         System.out.println("Class names: " + String.join(", ", classes));
-//                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
+                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
 //                        for(CovidEvent e: class1)
 //                            System.out.println(e);
-//                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+                        System.out.println("Class " + classes.get(1) + " has " + class1.size() + " events.");
+                        System.out.println("There are " + CovidEvent.eventList.size() + " classes");
                     }
+
                 }).start();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

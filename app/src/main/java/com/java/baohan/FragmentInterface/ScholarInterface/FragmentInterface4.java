@@ -33,8 +33,6 @@ public class FragmentInterface4 extends Fragment {
 
     private static final String[] titles = new String[]{"高关注学者", "追忆学者"};
 
-    private FragmentInterface4() {}
-
     public static FragmentInterface4 getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FragmentInterface4();
