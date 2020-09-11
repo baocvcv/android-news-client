@@ -5,14 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.java.baohan.R;
-import com.java.baohan.backend.CovidEvent;
 import com.java.baohan.backend.NewsViewModel;
 import com.java.baohan.ui.main.NewsActivity;
 import com.java.baohan.ui.main.TableSetActivity;
@@ -42,12 +35,22 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentInterface1 extends Fragment {
     private static FragmentInterface1 instance = null;
     private NewsViewModel newsViewModel;
+    private FragmentInterface1() { }
 
-    public FragmentInterface1() { }
+    public FragmentInterface1(NewsViewModel m) {
+        newsViewModel = m;
+    }
+
+    public static FragmentInterface1 getInstance(NewsViewModel m) {
+        if (instance == null) {
+            instance = new FragmentInterface1(m);
+        }
+        return instance;
+    }
 
     public static FragmentInterface1 getInstance() {
         if (instance == null) {
-            instance = new FragmentInterface1();
+            return null;
         }
         return instance;
     }
@@ -77,12 +80,11 @@ public class FragmentInterface1 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         fragmentList.clear();
-        fragmentList.add(FragmentInterface1_sub.newInstance("搜索"));
-        fragmentList.add(FragmentInterface1_sub.newInstance("news"));
-        fragmentList.add(FragmentInterface1_sub.newInstance("papers"));
-        fragmentList.add(FragmentInterface1_sub.newInstance("疫苗研发"));
+        fragmentList.add(new FragmentInterface1_sub("搜索"));
+        fragmentList.add(new FragmentInterface1_sub("news"));
+        fragmentList.add(new FragmentInterface1_sub("papers"));
+        fragmentList.add(new FragmentInterface1_sub("收藏"));
         for(int i=0;i<fragmentList.size();i++)
         {
             tableList.add(fragmentList.get(i).getKeyWord());
@@ -95,62 +97,7 @@ public class FragmentInterface1 extends Fragment {
 
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
         setButton=view.findViewById(R.id.set_button);
-
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        p.setMargins(40, 2, 2, 40);
-
-        View hll = view.findViewById(R.id.history_list_layout);
-        LinearLayout searchHistoryLayout = view.findViewById(R.id.history_list);
-        EditText searchInput = view.findViewById(R.id.search_text_fg1);
-        searchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b) {
-                    List<String> history = newsViewModel.getSearchHistory();
-                    searchHistoryLayout.removeAllViews();
-                    for(int i = 0; i < 10 && i < history.size(); i++) {
-                        TextView tv = new TextView(view.getContext());
-                        tv.setText(history.get(i));
-                        tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        tv.setPadding(2, 2 , 2, 2);
-                        tv.setBackgroundColor(Color.rgb(212,232,246));
-                        tv.setLayoutParams(p);
-                        searchHistoryLayout.addView(tv);
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String s = tv.getText().toString();
-                                fragmentList.get(0).search(s);
-                                searchInput.setText(s);
-                                searchInput.clearFocus();
-                                hll.setVisibility(View.GONE);
-                                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                viewPager.setCurrentItem(0);
-                                //TODO
-                            }
-                        });
-                    }
-                    hll.setVisibility(View.VISIBLE);
-                } else {
-                    hll.setVisibility(View.GONE);
-                }
-            }
-        });
-
         searchButton=view.findViewById(R.id.search_button_fg1);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String s = searchInput.getText().toString().trim();
-                if(!s.isEmpty()) {
-                    fragmentList.get(0).search(s);
-                    searchInput.clearFocus();
-                    ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    viewPager.setCurrentItem(0);
-                    //TODO
-                }
-            }
-        });
 
         tabLayout=view.findViewById(R.id.tab_layout);
         mAdapter= new MyAdapter(mcontext,getChildFragmentManager(), fragmentList);
@@ -164,28 +111,18 @@ public class FragmentInterface1 extends Fragment {
             {
                 int sizeList=fragmentList.size();
                 Intent intent = new Intent(getActivity(), TableSetActivity.class);
-                intent.putExtra("num",(sizeList-1)+"");
+                intent.putExtra("num",sizeList+"");
 
-                for(int i = 1;i<sizeList;i++){
+                int i=0;
+                for(;i<sizeList;i++){
                     String na="list"+String.valueOf(i);
-                    intent.putExtra("list"+(i-1),fragmentList.get(i).getKeyWord());
+                    intent.putExtra("list"+i,fragmentList.get(i).getKeyWord());
                 }
 
                 startActivityForResult(intent, 1);
             }
         });
 
-        Button btnCancel = view.findViewById(R.id.btn_cancel_search);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchInput.clearFocus();
-                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        });
-
-        if(fragmentList.size() > 1)
-            viewPager.setCurrentItem(1);
         return view;
     }
 
@@ -196,26 +133,22 @@ public class FragmentInterface1 extends Fragment {
         if(resultCode==3) {
             switch (requestCode) {
                 case 1:
-                    while(fragmentList.size() > 1){
-                        fragmentList.remove(1);
-                        tableList.remove(1);
-                    }
-                    for(FragmentInterface1_sub f: fragmentList) {
-                        System.out.println(f.getKeyWord());
-                    }
+                    fragmentList.clear();
+                    tableList.clear();
                     String tmp = intent.getStringExtra("num");
-//                    System.out.println(tmp+"-------------------------------------------------------------------");
+                    System.out.println(tmp+"-------------------------------------------------------------------");
                     //Toast.makeText(getActivity(),tmp+"",Toast.LENGTH_SHORT).show();
                     int sizeList = Integer.parseInt(tmp);
                     for(int i=0;i<sizeList;i++)
                     {
                         String tabel=intent.getStringExtra("list"+i);
                         tableList.add(tabel);
-                        fragmentList.add(FragmentInterface1_sub.newInstance(tabel));
+                        fragmentList.add(new FragmentInterface1_sub(tabel));
                     }
 
                     mAdapter.notifyDataSetChanged();
                     break;
+
             }
         }
     }
