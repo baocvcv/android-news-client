@@ -16,6 +16,7 @@ import com.java.baohan.FragmentInterface.FragmentInterface1;
 import com.java.baohan.FragmentInterface.FragmentInterface1_sub;
 import com.java.baohan.MainActivity;
 import com.java.baohan.R;
+import com.java.baohan.backend.CovidEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,11 @@ public class TableSetActivity extends AppCompatActivity {
         standardList.add("收藏");
         standardList.add("news");
         standardList.add("papers");
-        //聚类名字放在这里
-        standardList.add("");
-        standardList.add("");
-        standardList.add("");
+        List<String> classes = CovidEvent.getClassNames();
+
+        standardList.add(classes.get(0));
+        standardList.add(classes.get(1));
+        standardList.add(classes.get(2));
     }
 
     @Override
