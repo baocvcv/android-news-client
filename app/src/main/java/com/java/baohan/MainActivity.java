@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.content.Intent;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -157,25 +158,25 @@ public class MainActivity extends AppCompatActivity {
                         // search
                         List<News> result = mNewsViewModel.searchRecentNews("新冠");
                         System.out.println("Searching for 新冠");
-                        for (News n : result) {
-                            System.out.println("Search result: " + n);
-                        }
-                        System.out.println("Got " + result.size() + " results");
+                        //for (News n : result) {
+                        //    System.out.println("Search result: " + n);
+                        //}
+                        //System.out.println("Got " + result.size() + " results");
 //                        mNewsViewModel.markRead(result.get(1)); // can mark the news as read with this
                         result = mNewsViewModel.searchRecentNews("疫苗");
                         System.out.println("Search for 疫苗 " + " got " + result.size() + " results");
 
                         // view search history
-                        System.out.print("Search history: ");
-                        System.out.println(String.join(", ", mNewsViewModel.getSearchHistory()));
+                        //System.out.print("Search history: ");
+                        //System.out.println(String.join(", ", mNewsViewModel.getSearchHistory()));
 
                         // get scholars
-                        ConcurrentHashMap<String, Scholar> aliveScholars = Scholar.getAliveScholars();
+                        //ConcurrentHashMap<String, Scholar> aliveScholars = Scholar.getAliveScholars();
 //                        for (Map.Entry<String, Scholar> entry: aliveScholars.entrySet()) {
 //                            Scholar s = entry.getValue();
 //                            System.out.println(s.name_zh + ": " + String.join("^", s.affiliation));
 //                        }
-                        System.out.println("There are " + aliveScholars.size() + " alive scholars");
+                        //System.out.println("There are " + aliveScholars.size() + " alive scholars");
 
 
                         // request for knowledge graph
@@ -187,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         // Covid event list
-//                        List<String> classes = CovidEvent.getClassNames();
-//                        System.out.println("Class names: " + String.join(", ", classes));
+                        List<String> classes = CovidEvent.getClassNames();
+                        System.out.println("Class names: " + String.join(", ", classes));
 //                        List<CovidEvent> class1 = CovidEvent.getEventList(1);
 //                        for(CovidEvent e: class1)
 //                            System.out.println(e);
@@ -229,5 +230,12 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return (info != null && info.isConnected());
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        super.onActivityResult(requestCode,resultCode,intent);
+        Fragment fragment = FragmentInterface1.getInstance();
+        fragment.onActivityResult(requestCode,resultCode,intent);
     }
 }

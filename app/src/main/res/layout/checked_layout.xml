@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#EFFFFF"
+            android:paddingRight="20dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/emm"
+                android:text="已选择:"
+                android:textSize="30dp"
+                android:paddingLeft="10dp"/>
+            <Button
+                android:id="@+id/checked_goback"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignRight="@+id/emm"
+                android:text="back"/>
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/listview1"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#EFFFFF"
+            android:text="未选择:"
+            android:textSize="30dp"
+            android:paddingLeft="10dp"/>
+
+        <ListView
+            android:id="@+id/listview2"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+    </LinearLayout>
+
+
+</LinearLayout>

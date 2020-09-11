@@ -1,13 +1,16 @@
 package com.java.baohan.FragmentInterface;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,16 +22,19 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.java.baohan.R;
 import com.java.baohan.backend.NewsViewModel;
+import com.java.baohan.ui.main.NewsActivity;
+import com.java.baohan.ui.main.TableSetActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 //Fragment for news
 public class FragmentInterface1 extends Fragment {
     private static FragmentInterface1 instance = null;
-
     private NewsViewModel newsViewModel;
-
     private FragmentInterface1() { }
 
     private FragmentInterface1(NewsViewModel m) {
@@ -42,11 +48,22 @@ public class FragmentInterface1 extends Fragment {
         return instance;
     }
 
+    public static FragmentInterface1 getInstance() {
+        if (instance == null) {
+            return null;
+        }
+        return instance;
+    }
+
     private ViewPager viewPager;
     private TabLayout tabLayout;
     String[] tvTabs;
-    private List<Fragment> fragmentList = new ArrayList<Fragment>();
+    private List<FragmentInterface1_sub> fragmentList = new ArrayList<FragmentInterface1_sub>();
+    private ArrayList<String> tableList=new ArrayList<String>();
     private Context mcontext;
+    private RelativeLayout setButton;
+    private RelativeLayout searchButton;
+    private MyAdapter mAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -64,15 +81,14 @@ public class FragmentInterface1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragmentList.clear();
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
-        fragmentList.add(new FragmentInterface1_sub());
+        fragmentList.add(new FragmentInterface1_sub("搜索"));
+        fragmentList.add(new FragmentInterface1_sub("news"));
+        fragmentList.add(new FragmentInterface1_sub("papers"));
+        fragmentList.add(new FragmentInterface1_sub("收藏"));
+        for(int i=0;i<fragmentList.size();i++)
+        {
+            tableList.add(fragmentList.get(i).getKeyWord());
+        }
     }
 
     @Override
@@ -80,12 +96,59 @@ public class FragmentInterface1 extends Fragment {
         View view=inflater.inflate(R.layout.fragment_interface1,container,false);
 
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
+        setButton=view.findViewById(R.id.set_button);
+        searchButton=view.findViewById(R.id.search_button_fg1);
 
         tabLayout=view.findViewById(R.id.tab_layout);
-        viewPager.setAdapter(new MyAdapter(mcontext,getChildFragmentManager(), fragmentList));
+        mAdapter= new MyAdapter(mcontext,getChildFragmentManager(), fragmentList);
+        viewPager.setAdapter(mAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        setButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view)
+            {
+                int sizeList=fragmentList.size();
+                Intent intent = new Intent(getActivity(), TableSetActivity.class);
+                intent.putExtra("num",sizeList+"");
+                int i=0;
+                for(;i<sizeList;i++){
+                    String na="list"+String.valueOf(i);
+                    intent.putExtra("list"+i,fragmentList.get(i).getKeyWord());
+                }
+
+                startActivityForResult(intent, 1);
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent intent)
+    {
+        super.onActivityResult(requestCode,resultCode,intent);
+        switch(requestCode){
+            case 1:
+                if(resultCode == RESULT_OK){
+                    fragmentList.clear();
+                    tableList.clear();
+                    //Intent intent1=Intent.getIntentOld();
+                    String tmp = intent.getStringExtra("num");
+
+                    int sizeList = Integer.parseInt(tmp);
+                    for(int i=0;i<sizeList;i++)
+                    {
+                        String tabel=intent.getStringExtra("list"+i);
+                        tableList.add(tabel);
+                        fragmentList.add(new FragmentInterface1_sub(tabel));
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+        }
     }
 
     public void onViewCreated(@NonNull View view,@Nullable Bundle savedInstanceState){
@@ -95,19 +158,13 @@ public class FragmentInterface1 extends Fragment {
 
     public class MyAdapter extends FragmentPagerAdapter {
 
-        List<Fragment> fragmentList=new ArrayList<Fragment>();
+        List<FragmentInterface1_sub> fragmentList=new ArrayList<FragmentInterface1_sub>();
         private Context mContext;
-        private final int[] TAB_TITLES = new int[]{R.string.tab_text1_sub1, R.string.tab_text1_sub2,R.string.tab_text1_sub3
-                , R.string.tab_text1_sub4, R.string.tab_text1_sub5,R.string.tab_text1_sub6,
-                R.string.tab_text1_sub7, R.string.tab_text1_sub8,R.string.tab_text1_sub9, R.string.tab_text1_sub10};
-
-
-
         public MyAdapter(Context context,FragmentManager fm) {
             super(fm);
             mContext=context;
         }
-        public MyAdapter(Context context,FragmentManager fm, List<Fragment> fragmentList) {
+        public MyAdapter(Context context,FragmentManager fm, List<FragmentInterface1_sub> fragmentList) {
             super(fm);
             this.fragmentList = fragmentList;
             mContext=context;
@@ -120,7 +177,7 @@ public class FragmentInterface1 extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mContext.getResources().getString(TAB_TITLES[position]);
+            return tableList.get(position);
         }
 
 
