@@ -17,14 +17,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Scholar {
 
     /* public fields */
+    public boolean hasAvatar;
     public Bitmap avatar;
     public String name_en;
     public String name_zh;
 
+    public int numViewed;
+
+    // indices
     public double activity;
     public int citations;
     public double diversity;
@@ -45,9 +51,12 @@ public class Scholar {
     private boolean isAlive;
     private String id;
 
+    public static ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+
     /* private fields */
     private static final ConcurrentHashMap<String, Scholar> aliveScholars = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, Scholar> deadScholars = new ConcurrentHashMap<>();
+
 
     /* constants */
     private static final String URL_SCHOLAR = "https://innovaapi.aminer.cn/predictor/api/v1/valhalla/highlight/get_ncov_expers_list?v=2";
@@ -112,7 +121,19 @@ public class Scholar {
             //TODO: create a task queue for retrieving images, avoid having to wait for image to download
             if (!avatarURL.isEmpty()) {
                 // load image async
-                t = new Thread(new Runnable() {
+//                t = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            s.avatar = BitmapFactory.decodeStream(new URL(avatarURL).openConnection().getInputStream());
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                t.start();
+                s.hasAvatar = true;
+                executor.submit(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -122,7 +143,8 @@ public class Scholar {
                         }
                     }
                 });
-                t.start();
+            } else {
+                s.hasAvatar = false;
             }
 
             // parse basic info
@@ -130,6 +152,7 @@ public class Scholar {
             s.name_en = rawData.getString("name");
             s.name_zh = rawData.getString("name_zh");
             s.isAlive = !rawData.getBoolean("is_passedaway");
+            s.numViewed = rawData.getInt("num_viewed");
 
             JSONObject indices = rawData.getJSONObject("indices");
             s.activity = indices.getDouble("activity");
@@ -159,8 +182,8 @@ public class Scholar {
                 }
             }
 
-            if (t != null)
-                t.join();
+//            if (t != null)
+//                t.join();
             if (s.isAlive) {
                 aliveScholars.put(s.id, s);
             } else {

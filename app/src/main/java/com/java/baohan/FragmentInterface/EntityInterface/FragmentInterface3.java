@@ -24,6 +24,8 @@ import com.java.baohan.backend.KnowledgeRelation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 //Fragment for Epidemic map
 public class FragmentInterface3 extends Fragment {
@@ -36,6 +38,8 @@ public class FragmentInterface3 extends Fragment {
     private LinearLayout searchResult;
     private TextView searchInfo;
     private View loadingPanel;
+
+    private static ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     public static FragmentInterface3 getInstance() {
         if (INSTANCE == null) {
@@ -114,8 +118,19 @@ public class FragmentInterface3 extends Fragment {
             entityWiki.setVisibility(View.GONE);
         }
         ImageView img = entity.findViewById(R.id.entity_img);
-        if(n.img != null) {
-            img.setImageBitmap(n.img);
+        if(n.hasImg) {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    while(KnowledgeNode.executor.getTaskCount() != KnowledgeNode.executor.getCompletedTaskCount()) {
+                        try {
+                            Thread.sleep(5);
+                        } catch (Exception e) {}
+                    }
+                    img.setImageBitmap(n.img);
+                }
+            });
+//            img.setImageBitmap(n.img);
         } else {
             img.setVisibility(View.GONE);
         }
@@ -208,7 +223,7 @@ public class FragmentInterface3 extends Fragment {
             @Override
             public void onClick(View view) {
                 int v = entity.findViewById(R.id.relation_layout).getVisibility();
-                if(n.img != null)
+                if(n.hasImg)
                     entity.findViewById(R.id.entity_img).setVisibility(8 - v);
                 if(n.intro != null)
                     entity.findViewById(R.id.entity_wiki).setVisibility(8 - v);
@@ -219,10 +234,10 @@ public class FragmentInterface3 extends Fragment {
             }
         });
         if(visible) {
-            if (n.img != null)
-                entity.findViewById(R.id.entity_img).setVisibility(View.VISIBLE);
             if (n.intro != null)
                 entity.findViewById(R.id.entity_wiki).setVisibility(View.VISIBLE);
+            if (n.hasImg)
+                entity.findViewById(R.id.entity_img).setVisibility(View.VISIBLE);
             if (n.relations != null)
                 entity.findViewById(R.id.relation_layout).setVisibility(View.VISIBLE);
             if (n.properties != null)
