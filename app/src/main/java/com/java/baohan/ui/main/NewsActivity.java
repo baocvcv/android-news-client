@@ -61,7 +61,7 @@ public class NewsActivity extends AppCompatActivity {
                 share_intent.putExtra(Intent.EXTRA_SUBJECT, title);//添加分享内容标题
                 String msg;
                 if(content.length() > 20) {
-                    msg = content.substring(0, 60);
+                    msg = content.substring(0, 20);
                 } else {
                     msg = content;
                 }

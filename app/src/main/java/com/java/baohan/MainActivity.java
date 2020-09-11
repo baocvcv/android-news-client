@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(2);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);

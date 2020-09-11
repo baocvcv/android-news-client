@@ -10,10 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-<!--        <RelativeLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
             <include
                 layout="@layout/scholar_detail"
                 android:layout_height="wrap_content"
@@ -25,13 +21,14 @@
         android:id="@+id/scholar_list_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
             <LinearLayout
                 android:id="@+id/scholar_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical">
 
-<!--        </RelativeLayout>-->
+            </LinearLayout>
 
     </ScrollView>
 </RelativeLayout>
