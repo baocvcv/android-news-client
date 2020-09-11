@@ -69,6 +69,49 @@ public class NewsActivity extends AppCompatActivity {
                 //创建分享的Dialog
                 share_intent = Intent.createChooser(share_intent, title);
                 startActivity(share_intent);
+
+//                    Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
+
+//                    platform.setPlatformActionListener(new PlatformActionListener() {
+//                        @Override
+//                        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+//                            switch (i) {
+//                                case Platform.ACTION_AUTHORIZING:
+//                                    Toast.makeText(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT).show();
+//                                    //获取分享参数
+//                                    SinaWeibo.ShareParams params = new SinaWeibo.ShareParams();
+//                                    String sTxt = "http://www.baidu.com/互联";//转成url编码
+//                                    try {
+//                                        sTxt += URLEncoder.encode("互联", "utf-8");
+//                                    } catch (UnsupportedEncodingException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                    params.setText("测试指定平台分享 @1611 zsp 分享地址：" + sTxt);
+//                                    platform.share(params); //开始分享
+//                                    platform.showUser(null);
+//                                    break;
+//
+//                                case Platform.ACTION_SHARE:
+//                                    Log.d("zsp", "分享成功");
+//                                    Toast.makeText(getApplication(), "分享成功", Toast.LENGTH_SHORT).show();
+//                                    break;
+//                                case Platform.ACTION_USER_INFOR:
+//                                    break;
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onError(Platform platform, int i, Throwable throwable) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancel(Platform platform, int i) {
+//
+//                        }
+//                    });
+//                    platform.authorize();//分享授权
+//                }
             }
         });
     }
