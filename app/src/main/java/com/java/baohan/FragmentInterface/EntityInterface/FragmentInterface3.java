@@ -1,5 +1,8 @@
 package com.java.baohan.FragmentInterface.EntityInterface;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,6 +81,10 @@ public class FragmentInterface3 extends Fragment {
                 new SearchTask().execute(query);
             }
         });
+        ConnectivityManager cm = (ConnectivityManager) getActivity() .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if(info == null || !info.isConnected())
+            btn.setActivated(false);
 
         return root;
     }

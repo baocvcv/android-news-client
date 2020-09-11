@@ -1,6 +1,9 @@
 package com.java.baohan;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -80,52 +83,54 @@ public class MainActivity extends AppCompatActivity {
         Demonstration of NewsViewModel
          */
 
-
         // Required startup tasks for backend
         app = this.getApplication();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // load covid event list
-                CovidEvent.loadEventList(app);
+        if(isConnected()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // load covid event list
+                    CovidEvent.loadEventList(app);
 
-                // update news
-                mNewsViewModel.updatePapers();
-                mNewsViewModel.updateNews();
-            }
-        }).start();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // cache pandemic data
-                PandemicData.updateDataCache();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.detach(fragment2);
-                fragmentTransaction.attach(fragment2);
-                fragmentTransaction.commit();
-            }
-        }).start();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // download scholar info
-                Scholar.cacheScholars();
-                while(Scholar.executor.getTaskCount() != Scholar.executor.getCompletedTaskCount()) {
-                    try {
-                        Thread.sleep(5);
-                    } catch (Exception e) {}
+                    // update news
+                    mNewsViewModel.updatePapers();
+                    mNewsViewModel.updateNews();
                 }
-                fragment4.loadData();
-                if(getSupportFragmentManager().getFragments().contains(fragment4)) {
+            }).start();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // cache pandemic data
+                    PandemicData.updateDataCache();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.detach(fragment4);
-                    fragmentTransaction.attach(fragment4);
+                    fragmentTransaction.detach(fragment2);
+                    fragmentTransaction.attach(fragment2);
                     fragmentTransaction.commit();
                 }
-            }
-        }).start();
+            }).start();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // download scholar info
+                    Scholar.cacheScholars();
+                    while (Scholar.executor.getTaskCount() != Scholar.executor.getCompletedTaskCount()) {
+                        try {
+                            Thread.sleep(5);
+                        } catch (Exception e) {
+                        }
+                    }
+                    fragment4.loadData();
+                    if (getSupportFragmentManager().getFragments().contains(fragment4)) {
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.detach(fragment4);
+                        fragmentTransaction.attach(fragment4);
+                        fragmentTransaction.commit();
+                    }
+                }
+            }).start();
+        }
 
         // interfaces
         fab.setOnClickListener(new View.OnClickListener() {
@@ -218,5 +223,11 @@ public class MainActivity extends AppCompatActivity {
 //        System.out.println(entry);
 
 
+    }
+
+    boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return (info != null && info.isConnected());
     }
 }

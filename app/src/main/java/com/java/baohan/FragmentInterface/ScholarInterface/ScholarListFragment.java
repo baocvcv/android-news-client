@@ -38,10 +38,6 @@ public class ScholarListFragment extends Fragment {
     private ScrollView detail_scroll;
     private ScrollView list_scroll;
 
-    private ScrollView scrollView;
-
-    private int scrollY;
-
     public static ScholarListFragment newInstance(List<Scholar> scholars) {
         String jsonList = gson.toJson(scholars);
         ScholarListFragment f = new ScholarListFragment();
@@ -78,10 +74,8 @@ public class ScholarListFragment extends Fragment {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    setScrollY();
                     View disp = root.findViewById(R.id.scholar_detail_display);
                     parseDetail(disp, s);
-//                    disp.setVisibility(View.VISIBLE);
                     list_scroll.setVisibility(View.GONE);
                     detail_scroll.setVisibility(View.VISIBLE);
                     detail_scroll.scrollTo(0, detail_scroll.getTop());
@@ -92,18 +86,7 @@ public class ScholarListFragment extends Fragment {
         return root;
     }
 
-    private void setScrollY() {
-        scrollY = scrollView.getScrollY();
-        System.out.println("ScrollY = " + scrollY);
-    }
-
-    private void restoreScrollY() {
-        scrollView.scrollTo(0, scrollY);
-        System.out.println("Set scrollview to " + scrollY);
-    }
-
     private void parseScholar(View root, Scholar s) {
-//        View root = inflater.inflate(R.layout.scholar_brief, container, false);
         ImageView avatar = root.findViewById(R.id.scholar_avatar);
         if(s.hasAvatar) {
             avatar.setImageBitmap(s.avatar);
@@ -175,10 +158,8 @@ public class ScholarListFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                root.setVisibility(View.GONE);
                 detail_scroll.setVisibility(View.GONE);
                 list_scroll.setVisibility(View.VISIBLE);
-//                restoreScrollY();
             }
         });
     }
