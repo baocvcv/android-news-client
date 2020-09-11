@@ -111,6 +111,7 @@ public class FragmentInterface1 extends Fragment {
                 int sizeList=fragmentList.size();
                 Intent intent = new Intent(getActivity(), TableSetActivity.class);
                 intent.putExtra("num",sizeList+"");
+
                 int i=0;
                 for(;i<sizeList;i++){
                     String na="list"+String.valueOf(i);
@@ -128,14 +129,14 @@ public class FragmentInterface1 extends Fragment {
     public void onActivityResult(int requestCode,int resultCode,Intent intent)
     {
         super.onActivityResult(requestCode,resultCode,intent);
-        switch(requestCode){
-            case 1:
-                if(resultCode == RESULT_OK){
+        if(resultCode==3) {
+            switch (requestCode) {
+                case 1:
                     fragmentList.clear();
                     tableList.clear();
-                    //Intent intent1=Intent.getIntentOld();
                     String tmp = intent.getStringExtra("num");
-
+                    System.out.println(tmp+"-------------------------------------------------------------------");
+                    //Toast.makeText(getActivity(),tmp+"",Toast.LENGTH_SHORT).show();
                     int sizeList = Integer.parseInt(tmp);
                     for(int i=0;i<sizeList;i++)
                     {
@@ -145,8 +146,9 @@ public class FragmentInterface1 extends Fragment {
                     }
 
                     mAdapter.notifyDataSetChanged();
-                }
-                break;
+                    break;
+
+            }
         }
     }
 

@@ -34,6 +34,10 @@ public class TableSetActivity extends AppCompatActivity {
         standardList.add("收藏");
         standardList.add("news");
         standardList.add("papers");
+        //聚类名字放在这里
+        standardList.add("");
+        standardList.add("");
+        standardList.add("");
     }
 
     @Override
@@ -43,7 +47,6 @@ public class TableSetActivity extends AppCompatActivity {
 
         intiStandardList();
 
-        //initView();
         listView1 = findViewById(R.id.listview1);
         listView2 = findViewById(R.id.listview2);
         buttonGoback = findViewById(R.id.checked_goback);
@@ -52,7 +55,6 @@ public class TableSetActivity extends AppCompatActivity {
         String tmp = intent.getStringExtra("num");
 
         int sizeList = Integer.parseInt(tmp);
-        //Toast.makeText(this,sizeList+"",Toast.LENGTH_SHORT).show();
         for(int i=0;i<sizeList;i++)
             fragmentListIn.add(intent.getStringExtra("list"+i));
 
@@ -62,27 +64,29 @@ public class TableSetActivity extends AppCompatActivity {
                 fragmentListOut.add(standardList.get(i));
         }
 
+
         buttonGoback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TableSetActivity.this, MainActivity.class);
+                //Intent intent = new Intent(TableSetActivity.this, MainActivity.class);
+                Intent intent=new Intent();
                 int sizeList=fragmentListIn.size();
                 intent.putExtra("num",sizeList+"");
                 int i=0;
-                for(;i<sizeList;i++){
-                    String na="list"+String.valueOf(i);
-                    intent.putExtra("list"+i,fragmentListIn.get(i));
+                for(;i<sizeList;i++) {
+                    String na = "list" + String.valueOf(i);
+                    intent.putExtra("list" + i, fragmentListIn.get(i));
                 }
-                startActivityForResult(intent, 1);
-
+                setResult(3,intent);
+                finish();
             }
         });
 
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fragmentListIn);//新建并配置ArrayAapeter
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fragmentListIn);
         listView1.setAdapter(adapter1);
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fragmentListOut);//新建并配置ArrayAapeter
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fragmentListOut);
         listView2.setAdapter(adapter2);
 
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -108,4 +112,6 @@ public class TableSetActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.Toast;
 
 import com.java.baohan.backend.CovidEvent;
 import com.java.baohan.backend.KnowledgeGraph;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
+
 
         /*
         Demonstration of NewsViewModel
@@ -199,10 +201,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         super.onActivityResult(requestCode,resultCode,intent);
         Fragment fragment = FragmentInterface1.getInstance();
+        String tmp = intent.getStringExtra("num");
+        System.out.println(tmp+"-------------------------------------------------------------------");
+        Toast.makeText(this,tmp+"",Toast.LENGTH_SHORT).show();
         fragment.onActivityResult(requestCode,resultCode,intent);
     }
+
 }
