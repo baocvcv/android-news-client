@@ -46,7 +46,7 @@ public abstract class NewsDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 //TODO: change start up code
                 NewsDao dao = INSTANCE.newsDao();
-//                dao.deleteAll();
+                dao.deleteAll();
             });
         }
     };
