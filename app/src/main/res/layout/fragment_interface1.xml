@@ -1,48 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#FFF"
-    android:paddingBottom="50dp"
-    android:fillViewport="true">
+    android:backgroundTint="#FFFFFF"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:paddingBottom="50dp">
 
     <!-- 刷新提示区 -->
     <!-- /刷新提示区 -->
-
-
     <!-- 内容列表区 -->
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tab_layout"
-        >
-
-    </androidx.viewpager.widget.ViewPager>
-
-
-
-
     <!-- /内容列表区 -->
-
-
 
     <!-- 固定顶部 -->
     <LinearLayout
+        android:id="@+id/search_bar_fg1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:background="#FFD700"
-        android:id="@+id/search_bar_fg1">
+        android:background="#FBF4CF">
 
         <RelativeLayout
             android:id="@+id/set_button"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_marginRight="20dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
             <TextView
                 android:id="@+id/set_text_fg1"
                 android:layout_width="match_parent"
@@ -51,9 +37,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
                 android:gravity="center"
-                android:text="set"
+                android:text="更改"
+                android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
+
             <ImageView
                 android:id="@+id/set_image_fg1"
                 android:layout_width="30dp"
@@ -62,25 +50,27 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="2dp"
-                android:src="@drawable/set"/>
+                android:src="@drawable/set"
+                app:srcCompat="@android:drawable/ic_input_add" />
         </RelativeLayout>
 
         <EditText
+            android:id="@+id/search_text_fg1"
             android:layout_width="275dp"
             android:layout_height="40dp"
-            android:background="#FFFFFF"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:padding="5dp"
-            android:id="@+id/search_text_fg1"/>
+            android:background="#FFFFFF"
+            android:padding="5dp" />
 
 
         <RelativeLayout
             android:id="@+id/search_button_fg1"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_marginRight="20dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
             <TextView
                 android:id="@+id/search_bar_text_fg1"
                 android:layout_width="match_parent"
@@ -91,7 +81,8 @@
                 android:gravity="center"
                 android:text="搜索"
                 android:textColor="#000000"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
+
             <ImageView
                 android:id="@+id/search_bar_image_fg1"
                 android:layout_width="30dp"
@@ -100,34 +91,58 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="2dp"
-                android:src="@drawable/search"/>
+                android:src="@drawable/search"
+                app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
         </RelativeLayout>
     </LinearLayout>
     <!-- /固定顶部 -->
 
-    <!--/滑动导航-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="#EDF4D6"
+            android:padding="1dp"
+            android:text="搜索历史"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:id="@+id/history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="visible">
+
+        </LinearLayout>
+    </LinearLayout>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/search_bar_fg1"
         app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
         app:tabIndicatorColor="@color/colorAccent"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextColor="@color/colorPrimary"
         app:tabIndicatorFullWidth="false"
-        >
+        app:tabMaxWidth="0dp"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="@color/colorPrimary">
 
     </com.google.android.material.tabs.TabLayout>
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout">
 
-
-
-
-    <!--/滑动导航-->
-
-
-
-
-</RelativeLayout>
+    </androidx.viewpager.widget.ViewPager>
+</LinearLayout>

@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +100,42 @@ public class FragmentInterface1 extends Fragment {
 
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
         setButton=view.findViewById(R.id.set_button);
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        p.setMargins(3, 2, 2, 3);
+
+        LinearLayout searchHistoryLayout = view.findViewById(R.id.history_list);
+        EditText searchInput = view.findViewById(R.id.search_text_fg1);
+        searchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) {
+                    List<String> history = newsViewModel.getSearchHistory();
+                    searchHistoryLayout.removeAllViews();
+                    for(int i = 0; i < 10 && i < history.size(); i++) {
+                        TextView tv = new TextView(view.getContext());
+                        tv.setText(history.get(i));
+                        tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        tv.setPadding(2, 2 , 2, 2);
+                        tv.setBackgroundColor(Color.rgb(212,232,246));
+                        tv.setLayoutParams(p);
+                        searchHistoryLayout.addView(tv);
+                    }
+                    searchHistoryLayout.setVisibility(View.VISIBLE);
+                } else {
+                    searchHistoryLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         searchButton=view.findViewById(R.id.search_button_fg1);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: search
+            }
+        });
 
         tabLayout=view.findViewById(R.id.tab_layout);
         mAdapter= new MyAdapter(mcontext,getChildFragmentManager(), fragmentList);
