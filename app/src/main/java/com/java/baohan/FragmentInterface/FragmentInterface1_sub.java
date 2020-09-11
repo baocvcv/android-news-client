@@ -66,8 +66,23 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
 
     public final String getKeyWord(){return keyWord;}
 
+    public static FragmentInterface1_sub newInstance(String key) {
+        Bundle bundle = new Bundle();
+        bundle.putString("key", key);
+        FragmentInterface1_sub f = new FragmentInterface1_sub();
+        f.keyWord = key;
+        f.setArguments(bundle);
+        return f;
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            Bundle b = getArguments();
+            keyWord = b.getString("key");
+        } else {
+            keyWord = "";
+        }
         mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
         switch (keyWord) {
             case "搜索":
@@ -279,6 +294,7 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
                         Intent intent = new Intent(mcontext, NewsActivity.class);
                         intent.putExtra("title", n.title);
                         intent.putExtra("time", formatter_year.format(n.time));
+                        intent.putExtra("source", "来自：" + n.source);
                         intent.putExtra("content",n.content);
                         startActivityForResult(intent, 1);
                         new Thread(new Runnable() {
@@ -306,9 +322,10 @@ public class FragmentInterface1_sub extends Fragment implements Serializable {
                     @Override
                     public void onClick(View view){
                         Intent intent = new Intent(mcontext, NewsActivity.class);
-                        intent.putExtra("title", n.title);
+                        intent.putExtra("title", "Event");
                         intent.putExtra("time", formatter_year.format(n.date));
-                        intent.putExtra("content", "This is an event.");
+                        intent.putExtra("source", "");
+                        intent.putExtra("content", n.title + "\n" + "来自：" + n.url);
                         startActivityForResult(intent, 1);
                     }
                 });

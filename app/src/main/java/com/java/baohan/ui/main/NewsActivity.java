@@ -17,6 +17,7 @@ public class NewsActivity extends AppCompatActivity {
     Button buttonGoBack;
     TextView titleView;
     TextView timeView;
+    TextView sourceView;
     TextView contentView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class NewsActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         String time = intent.getStringExtra("time");
         String content="        "+ intent.getStringExtra("content");
+        String source = intent.getStringExtra("source");
 
 
 
@@ -38,6 +40,9 @@ public class NewsActivity extends AppCompatActivity {
         timeView.setText(time);
         contentView.setText(content);
         contentView.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+        sourceView = findViewById(R.id.news_source);
+        sourceView.setText(source);
 
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
 

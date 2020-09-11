@@ -78,19 +78,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-        mNewsViewModel.getAllNews().observe(this, new Observer<List<News>>() {
-            @Override
-            public void onChanged(List<News> news) {
-                System.out.println("News: " + news.size());
-            }
-        });
-        mNewsViewModel.getAllPapers().observe(this, new Observer<List<News>>() {
-            @Override
-            public void onChanged(List<News> news) {
-                System.out.println("Papers: " + news.size());
-            }
-        });
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -234,8 +221,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "无网络连接", Toast.LENGTH_LONG).show();
         }
     }
-
-
 
     boolean isConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

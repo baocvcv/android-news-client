@@ -79,10 +79,10 @@ public class FragmentInterface1 extends Fragment {
         super.onCreate(savedInstanceState);
         newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         fragmentList.clear();
-        fragmentList.add(new FragmentInterface1_sub("搜索"));
-        fragmentList.add(new FragmentInterface1_sub("news"));
-        fragmentList.add(new FragmentInterface1_sub("papers"));
-        fragmentList.add(new FragmentInterface1_sub("疫苗研发"));
+        fragmentList.add(FragmentInterface1_sub.newInstance("搜索"));
+        fragmentList.add(FragmentInterface1_sub.newInstance("news"));
+        fragmentList.add(FragmentInterface1_sub.newInstance("papers"));
+        fragmentList.add(FragmentInterface1_sub.newInstance("疫苗研发"));
         for(int i=0;i<fragmentList.size();i++)
         {
             tableList.add(fragmentList.get(i).getKeyWord());
@@ -211,7 +211,7 @@ public class FragmentInterface1 extends Fragment {
                     {
                         String tabel=intent.getStringExtra("list"+i);
                         tableList.add(tabel);
-                        fragmentList.add(new FragmentInterface1_sub(tabel));
+                        fragmentList.add(FragmentInterface1_sub.newInstance(tabel));
                     }
 
                     mAdapter.notifyDataSetChanged();
