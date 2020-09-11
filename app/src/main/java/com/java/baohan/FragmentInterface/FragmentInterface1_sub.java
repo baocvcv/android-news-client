@@ -31,10 +31,11 @@ import com.java.baohan.backend.NewsViewModel;
 import com.java.baohan.model.News;
 import com.java.baohan.ui.main.NewsActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentInterface1_sub extends Fragment {
+public class FragmentInterface1_sub extends Fragment implements Serializable {
     private Context mcontext;
     private List list=new ArrayList<News>();
     private List<News> updateList;
@@ -50,6 +51,8 @@ public class FragmentInterface1_sub extends Fragment {
     public FragmentInterface1_sub(String key){
         keyWord=key;
     }
+
+    public final String getKeyWord(){return keyWord;}
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +116,7 @@ public class FragmentInterface1_sub extends Fragment {
                 freshData();
             }
         });
-        
+
 
         allNews.observe(getViewLifecycleOwner(), new Observer<List<News>>() {
             @Override
